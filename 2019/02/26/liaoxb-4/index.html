@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>nfs服务器搭建和挂载实践 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVE">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nfs服务器搭建和挂载实践">
+<meta property="og:url" content="http://yoursite.com/2019/02/26/liaoxb-4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVE">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-849d1ae2d6cc802a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-4ff54a2c611efda1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-02-26T16:37:52.605Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nfs服务器搭建和挂载实践">
+<meta name="twitter:description" content="NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVE">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-849d1ae2d6cc802a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-liaoxb-4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/26/liaoxb-4/" class="article-date">
+  <time datetime="2019-02-26T15:30:56.000Z" itemprop="datePublished">2019-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nfs服务器搭建和挂载实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。<br>NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVER和CLIENT才能通过RPC来实现PROGRAM PORT（centos5之前，之后是rpcbind）的对应。可以这么理解RPC和NFS的关系：NFS是一个文件系统，而RPC是负责信息的传输。</p>
+<p>Centos系统环境：<br>服务端IP 192.168.1.28<br>客户端IP 192.168.1.21、192.168.1.155</p>
+<p>一、安装NFS-Server<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep nfs #检查系统是否已安装NFS</span><br><span class="line">yum install nfs-utils -y #客户端和服务端都要安装</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-849d1ae2d6cc802a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NFS启动状态查询.png"></p>
+<p>二、服务端配置启动NFS<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /var/nfsshare </span><br><span class="line">vim /etc/exports #配置共享目录供客户端集群以读写权限访问</span><br><span class="line">systemctl start nfs</span><br><span class="line">showmount -e localhost //查询NFS的共享状态</span><br><span class="line"></span><br><span class="line">[root@test--0004 ~]# showmount -e 192.168.1.28</span><br><span class="line">Export list for 192.168.1.28:</span><br><span class="line">/var/nfsshare2 *</span><br><span class="line">/var/nfsshare *</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-4ff54a2c611efda1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="查询NFS共享.png"></p>
+<p>说明：NFS服务的配置文件为/etc/exports，这个文件是NFS的主要配置文件，不过系统并没有默认值，所以这个文件不一定会存在，可能要使用vim手动建立，然后在文件里面写入配置内容。内容格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他)]</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">1、输出目录：输出目录是指NFS系统中需要共享给客户机使用的目录；</span><br><span class="line">2、客户端：客户端是指网络中可以访问这个NFS输出目录的计算机</span><br><span class="line">          客户端常用的指定方式：</span><br><span class="line">          指定ip地址的主机：192.168.8.106</span><br><span class="line">          指定子网中的所有主机：192.168.0.0/24或 192.168.0.0/255.255.255.0</span><br><span class="line">          指定域名的主机：wj.bsmart.com</span><br><span class="line">          指定域中的所有主机：*.bsmart.com</span><br><span class="line">          所有主机：*</span><br><span class="line"></span><br><span class="line">3、 选项：选项用来设置输出目录的访问权限、用户映射等。</span><br><span class="line"></span><br><span class="line">   NFS主要有3类选项：</span><br><span class="line"></span><br><span class="line">  1）访问权限选项：</span><br><span class="line"></span><br><span class="line">          设置输出目录只读：ro</span><br><span class="line">          设置输出目录读写：rw</span><br><span class="line">          </span><br><span class="line">2）用户映射选项</span><br><span class="line"></span><br><span class="line">    all_squash：将远程访问的所有普通用户及所属组都映射为匿名用户或用户组（nfsnobody）；</span><br><span class="line">    no_all_squash：与all_squash取反（默认设置）；</span><br><span class="line">    root_squash：将root用户及所属组都映射为匿名用户或用户组（默认设置）；</span><br><span class="line">    no_root_squash：与rootsquash取反；</span><br><span class="line">    anonuid=xxx：将远程访问的所有用户都映射为匿名用户，并指定该用户为本地用户（UID=xxx）；</span><br><span class="line">    anongid=xxx：将远程访问的所有用户组都映射为匿名用户组账户，并指定该匿名用户组账户为本地用户组账户（GID=xxx）；</span><br><span class="line"></span><br><span class="line">3）其它选项</span><br><span class="line"></span><br><span class="line">    secure：限制客户端只能从小于1024的tcp/ip端口连接nfs服务器（默认设置）；</span><br><span class="line">    insecure：允许客户端从大于1024的tcp/ip端口连接服务器；</span><br><span class="line">    sync：将数据同步写入内存缓冲区与磁盘中，效率低，但可以保证数据的一致性；</span><br><span class="line">    async：将数据先保存在内存缓冲区中，必要时才写入磁盘；</span><br><span class="line">    wdelay：检查是否有相关的写操作，如果有则将这些写操作一起执行，这样可以提高效率（默认设置）；</span><br><span class="line">    no_wdelay：若有写操作则立即执行，应与sync配合使用；</span><br><span class="line">    subtree：若输出目录是一个子目录，则nfs服务器将检查其父目录的权限(默认设置)；</span><br><span class="line">    no_subtree：即使输出目录是一个子目录，nfs服务器也不检查其父目录的权限，这样可以提高效率；</span><br></pre></td></tr></table></figure>
+<p>三、设置开机启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable rpcbind.service</span><br><span class="line">systemctl enable nfs-service</span><br></pre></td></tr></table></figure></p>
+<p>四、测试挂载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">客户端执行：</span><br><span class="line">mount -t nfs 192.168.1.28:/var/nfsshare /mnt #客户端挂载NFS服务器中的共享目录</span><br><span class="line">touch /mnt/test.txt #客户端挂载点生成文件，此文件会被共享至NFS服务器:/var/nfsshare</span><br><span class="line">echo &quot;hello word&quot; &gt; /mnt/test.txt</span><br><span class="line">umount /mnt #解除和NFS服务器的挂载</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/26/liaoxb-4/" data-id="cjslzvqmx0004tovzqrhkuyng" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/26/liaoxb-3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          故障排查-linux命令测试端口连通性
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/26/liaoxb-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">linux实用命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/linux/" style="font-size: 20px;">linux</a> <a href="/tags/性能测试/" style="font-size: 10px;">性能测试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/27/liaoxb-5/">性能测试基础</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-3/">故障排查-linux命令测试端口连通性</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-4/">nfs服务器搭建和挂载实践</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-2/">linux实用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-1/">故障排查-linux查看程序端口占用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
