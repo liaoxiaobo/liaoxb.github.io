@@ -5,16 +5,19 @@
   
 
   
-  <title>linux | Hexo</title>
+  <title>linux实用命令 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="linux">
+  <meta name="description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux实用命令">
 <meta property="og:url" content="http://yoursite.com/2019/02/26/linux/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-02-26T15:02:56.319Z">
+<meta property="og:updated_time" content="2019-02-26T15:17:00.021Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux">
+<meta name="twitter:title" content="linux实用命令">
+<meta name="twitter:description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -75,7 +78,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      linux
+      linux实用命令
     </h1>
   
 
@@ -83,11 +86,166 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p>linux命令大全汇总    <a href="http://man.linuxde.net/netstat" target="_blank" rel="noopener">http://man.linuxde.net/netstat</a></p>
+<ul>
+<li>ls<br>-<ul>
+<li>ls -l 列出文件详细信息l(list)</li>
+<li>ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all)</li>
+<li>ll -d /var/log/message* 查找某目录下以message开头的文件 </li>
+</ul>
+</li>
+<li>mkdir<br>-<ul>
+<li>mkdir -p 创建目录，若无父目录，则创建p(parent)</li>
+</ul>
+</li>
+<li>echo  <ul>
+<li></li>
+<li>echo “hello” &gt; new.yaml 创建带有内容的文件</li>
+</ul>
+</li>
+<li>scp<ul>
+<li></li>
+<li>scp -r <a href="mailto:root@10.10.10.10" target="_blank" rel="noopener">root@10.10.10.10</a>:/opt/soft/mongodb /opt/soft/ 从远程拷贝目录到本地</li>
+<li>scp -r /opt/soft/mongodb <a href="mailto:root@10.10.10.10" target="_blank" rel="noopener">root@10.10.10.10</a>:/opt/soft/scptest 上传本地目录到远程机器指定目录</li>
+</ul>
+</li>
+<li>find <ul>
+<li></li>
+<li>find / -name nginx.conf 查找根目录/是否存在nginx.conf</li>
+<li>find /home -name “*.txt” 在/home目录下查找以.txt结尾的文件名</li>
+<li>find / -size +500M 搜索大于500M的文件</li>
+</ul>
+</li>
+<li>wc<ul>
+<li></li>
+<li>wc -l 统计文本行数</li>
+<li>wc -w 统计文本字数</li>
+<li>wc -c 统计文本字节数</li>
+</ul>
+</li>
+<li>grep<ul>
+<li></li>
+<li>grep “match_pattern” file_1 file_2 file_3 … 多文件中查找包含“match_pattern”的文本行</li>
+<li>grep -c “text” file_name 统计文件或者文本中包含匹配字符串的行数</li>
+<li>echo this is a test line. | grep -o -E “[a-z]+.“ 使用正则表达式 -E</li>
+</ul>
+</li>
+<li>tree<ul>
+<li></li>
+<li>树形结构列出指定目录下的所有文件，包括子目录里的文件</li>
+</ul>
+</li>
+<li>more、less<ul>
+<li></li>
+<li>分页显示文本文件内容</li>
+</ul>
+</li>
+<li>head、tail<ul>
+<li></li>
+<li>显示文件头、尾内容</li>
+</ul>
+</li>
+<li>dd<ul>
+<li></li>
+<li>dd if=/dev/zero of=out.txt bs=10M count=1 创建一个50M的文件，文件名为out.txt</li>
+</ul>
+</li>
+<li>tar<ul>
+<li></li>
+<li>tar -cvf log.tar log2012.log 仅打包，不压缩！ </li>
+<li>tar -zcvf log.tar.gz log2012.log   打包后，以 gzip 压缩 </li>
+<li>tar -jcvf log.tar.bz2 log2012.log  打包后，以 bzip2 压缩</li>
+<li>tar -ztvf log.tar.gz 查阅tar包内有哪些文件</li>
+<li>tar -zxvf /opt/soft/test/log.tar.gz 将tar包解压缩</li>
+</ul>
+</li>
+<li>nohup<ul>
+<li></li>
+<li>nohup command &gt; myout.file 2&gt;&amp;1 &amp; stderr和stdout被重定向到myout.file文件中</li>
+<li>使用Ctrl + C发送SIGINT信号，程序关闭；关闭session发送SIGHUP信号，程序免疫；平时经常使用nohup和&amp;配合来启动程序。双同免疫</li>
+</ul>
+</li>
+</ul>
+<h1 id="系统管理命令"><a href="#系统管理命令" class="headerlink" title="系统管理命令"></a>系统管理命令</h1><ul>
+<li>du<ul>
+<li></li>
+<li><em>du -sh</em> 对文件和目录磁盘使用的空间总量的查看</li>
+</ul>
+</li>
+<li>df<ul>
+<li></li>
+<li><em>df -h</em> 显示磁盘分区上的可使用的磁盘空间</li>
+</ul>
+</li>
+<li>watch<ul>
+<li></li>
+<li><em>watch -d -n 60 “free -h”</em> 每分钟动态监测主机内存的使用情况</li>
+</ul>
+</li>
+<li>stat<br>-<ul>
+<li>显示指定文件的详细信息，比ls更详细</li>
+</ul>
+</li>
+<li>who<br>-<ul>
+<li>显示在线登陆用户</li>
+</ul>
+</li>
+<li>whoami<br>-<ul>
+<li>显示当前操作用户</li>
+</ul>
+</li>
+<li>uname<br>-<ul>
+<li><em>uname -r</em> 显示linux内核版本</li>
+</ul>
+</li>
+<li>rpm<br>-<ul>
+<li><em>rpm -qa</em> 列出所有安装过的包</li>
+<li><em>rpm -ql nfs-utils-1.3.0-0.54.el7.x86_64</em> 获取rpm包中的文件安装路径</li>
+<li><em>rpm -ivh your-package.rpm</em> 安装rpm软件包</li>
+</ul>
+</li>
+<li>ps<br>-<ul>
+<li><em>ps -ef</em> 显示瞬间进程状态 </li>
+</ul>
+</li>
+<li>alias<br>-<ul>
+<li><em>alias showmeit=”ps -aux”</em><br>命令重命名，另外解除使用unaliax showmeit</li>
+</ul>
+</li>
+<li>script<br>-<ul>
+<li><em>script -q myfile</em> 静默模式记录，exit 退出记录</li>
+</ul>
+</li>
+<li><p>crontab<br>-<br>crontab文件的含义：用户所建立的crontab文件中，每一行都代表一项任务，每行的每个字段代表一项设置，它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：minute   hour   day   month   week   command</p>
+<p><em>10 1 </em> <em> 6,0 /etc/init.d/smb restart</em> 每周六、周日的1:10重启smb</p>
+<p><strong>创建cron脚本用法</strong></p>
+<ul>
+<li>第一步，vi创建cron脚本,命名为crontest.cron，写入命令<em>0 9 </em> <em> </em> echo “Good morning.” &gt;&gt; /tmp/test.txt* 每天早上9点执行打印一次命令</li>
+<li>第二步：添加定时任务。执行命令 <em>crontab crontest.cron</em> 搞定</li>
+<li>第三步：<em>crontab -l</em> 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</li>
+</ul>
+<p><strong>其它用法</strong></p>
+<ul>
+<li><em>crontab -r</em> 删除该用户的定时任务</li>
+<li><em>crontab -e</em> 编辑该用户的定时任务</li>
+</ul>
+</li>
+</ul>
+<h1 id="网络管理命令"><a href="#网络管理命令" class="headerlink" title="网络管理命令"></a>网络管理命令</h1><ul>
+<li>wget<ul>
+<li></li>
+<li><em>wget <a href="https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz" target="_blank" rel="noopener">https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz</a></em> 下载harbor安装包，默认会以最后一个符合/的后面的字符来命令</li>
+<li><em>wget -O harbor.tgz <a href="https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz" target="_blank" rel="noopener">https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz</a></em> 下载并以不同的文件名保存</li>
+<li><em>wget -b url</em> 后台下载</li>
+<li><em>wget -b url</em> 断电续传</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/02/26/linux/" data-id="cjslwxun00001x5vz2poxikdr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/02/26/linux/" data-id="cjslwztm00001y4vz8v7hpnbx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -136,7 +294,7 @@
       <ul>
         
           <li>
-            <a href="/2019/02/26/linux/">linux</a>
+            <a href="/2019/02/26/linux/">linux实用命令</a>
           </li>
         
           <li>
