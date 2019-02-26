@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>故障排查-linux命令测试端口连通性 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="故障排查-linux命令测试端口连通性">
+<meta property="og:url" content="http://yoursite.com/2019/02/26/liaoxb-3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-02-26T16:24:25.721Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="故障排查-linux命令测试端口连通性">
+<meta name="twitter:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-liaoxb-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/26/liaoxb-3/" class="article-date">
+  <time datetime="2019-02-26T15:30:56.000Z" itemprop="datePublished">2019-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      故障排查-linux命令测试端口连通性
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
+<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例1.png"></p>
+<p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
+<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例2.png"></p>
+<p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
+<p>debian 或者 ubuntu : sudo apt-get install wget</p>
+<p>centos : sudo yum -y install wget</p>
+<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例3.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/26/liaoxb-3/" data-id="cjslzgz1g0003p7vzv0gdcn6l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/02/26/liaoxb-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">linux实用命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/linux/" style="font-size: 10px;">linux</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-3/">故障排查-linux命令测试端口连通性</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-2/">linux实用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/26/liaoxb-1/">故障排查-linux查看程序端口占用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
