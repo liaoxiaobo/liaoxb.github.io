@@ -79,22 +79,21 @@
 
 
 
-<meta name="description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta name="description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="故障排查-linux命令测试端口连通性">
-<meta property="og:url" content="http://yoursite.com/2019/02/26/liaoxb-3/index.html">
+<meta property="og:title" content="故障排查-linux查看程序端口占用">
+<meta property="og:url" content="http://yoursite.com/2018/01/26/liaoxb-2018.1.26md/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta property="og:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-02-26T16:24:25.721Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-04T06:14:55.603Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="故障排查-linux命令测试端口连通性">
-<meta name="twitter:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="故障排查-linux查看程序端口占用">
+<meta name="twitter:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -124,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/02/26/liaoxb-3/">
+  <link rel="canonical" href="http://yoursite.com/2018/01/26/liaoxb-2018.1.26md/">
 
 
 
 
 
-  <title>故障排查-linux命令测试端口连通性 | Hexo</title>
+  <title>故障排查-linux查看程序端口占用 | Hexo</title>
   
 
 
@@ -237,7 +236,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/26/liaoxb-3/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/liaoxb-2018.1.26md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -254,7 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">故障排查-linux命令测试端口连通性</h1>
+          <h1 class="post-title" itemprop="name headline">故障排查-linux查看程序端口占用</h1>
         
 
         <div class="post-meta">
@@ -266,8 +265,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-26T23:30:56+08:00">
-                2019-02-26
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-26T23:00:56+08:00">
+                2018-01-26
               </time>
             
 
@@ -304,14 +303,11 @@
       
 
       
-        <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
-<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例1.png"></p>
-<p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
-<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例2.png"></p>
-<p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
-<p>debian 或者 ubuntu : sudo apt-get install wget</p>
-<p>centos : sudo yum -y install wget</p>
-<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例3.png"></p>
+        <p>1、安装net-tools命令行工具 yum install -y net-tools<br>2、执行命令查看被占用端口的pid netstat -anlp | grep port<br>如下图，发现本机8083端口被22980的程序wisecloud-met所占用</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
+<p>3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道8083端口是被哪个程序占用了！然后判断是否使用KILL命令干掉！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2.png"></p>
+<p>知识拓展：<a href="https://www.cnblogs.com/wonux/p/6268134.html" target="_blank" rel="noopener">Linux网络管理常用命令：net-tools VS iproute2</a></p>
 
       
     </div>
@@ -342,8 +338,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/26/liaoxb-4/" rel="next" title="nfs服务器搭建和挂载实践">
-                <i class="fa fa-chevron-left"></i> nfs服务器搭建和挂载实践
+              <a href="/2018/01/20/liaoxb-2018.1.20/" rel="next" title="linux实用命令">
+                <i class="fa fa-chevron-left"></i> linux实用命令
               </a>
             
           </div>
@@ -352,8 +348,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/27/liaoxb-5/" rel="prev" title="性能测试基础">
-                性能测试基础 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/26/liaoxb-2018.1.26/" rel="prev" title="故障排查-linux命令测试端口连通性">
+                故障排查-linux命令测试端口连通性 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

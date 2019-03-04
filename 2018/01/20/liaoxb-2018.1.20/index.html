@@ -79,22 +79,18 @@
 
 
 
-<meta name="description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta name="description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="故障排查-linux命令测试端口连通性">
-<meta property="og:url" content="http://yoursite.com/2019/02/26/liaoxb-3/index.html">
+<meta property="og:title" content="linux实用命令">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/liaoxb-2018.1.20/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
+<meta property="og:description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-02-26T16:24:25.721Z">
+<meta property="og:updated_time" content="2019-03-04T06:17:45.161Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="故障排查-linux命令测试端口连通性">
-<meta name="twitter:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="linux实用命令">
+<meta name="twitter:description" content="常用命令linux命令大全汇总    http://man.linuxde.net/netstat  ls- ls -l 列出文件详细信息l(list) ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all) ll -d /var/log/message* 查找某目录下以message开头的文件    mkdir- mkdir -p 创建目录，若无父目录，则创建p(parent)   e">
 
 
 
@@ -124,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/02/26/liaoxb-3/">
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/liaoxb-2018.1.20/">
 
 
 
 
 
-  <title>故障排查-linux命令测试端口连通性 | Hexo</title>
+  <title>linux实用命令 | Hexo</title>
   
 
 
@@ -237,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/26/liaoxb-3/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/liaoxb-2018.1.20/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -254,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">故障排查-linux命令测试端口连通性</h1>
+          <h1 class="post-title" itemprop="name headline">linux实用命令</h1>
         
 
         <div class="post-meta">
@@ -266,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-26T23:30:56+08:00">
-                2019-02-26
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-20T23:02:56+08:00">
+                2018-01-20
               </time>
             
 
@@ -304,14 +300,161 @@
       
 
       
-        <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
-<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例1.png"></p>
-<p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
-<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例2.png"></p>
-<p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
-<p>debian 或者 ubuntu : sudo apt-get install wget</p>
-<p>centos : sudo yum -y install wget</p>
-<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例3.png"></p>
+        <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p>linux命令大全汇总    <a href="http://man.linuxde.net/netstat" target="_blank" rel="noopener">http://man.linuxde.net/netstat</a></p>
+<ul>
+<li>ls<br>-<ul>
+<li>ls -l 列出文件详细信息l(list)</li>
+<li>ls -a 列出当前目录下所有文件及目录，包括隐藏的a(all)</li>
+<li>ll -d /var/log/message* 查找某目录下以message开头的文件 </li>
+</ul>
+</li>
+<li>mkdir<br>-<ul>
+<li>mkdir -p 创建目录，若无父目录，则创建p(parent)</li>
+</ul>
+</li>
+<li>echo  <ul>
+<li></li>
+<li>echo “hello” &gt; new.yaml 创建带有内容的文件</li>
+</ul>
+</li>
+<li>scp<ul>
+<li></li>
+<li>scp -r <a href="mailto:root@10.10.10.10" target="_blank" rel="noopener">root@10.10.10.10</a>:/opt/soft/mongodb /opt/soft/ 从远程拷贝目录到本地</li>
+<li>scp -r /opt/soft/mongodb <a href="mailto:root@10.10.10.10" target="_blank" rel="noopener">root@10.10.10.10</a>:/opt/soft/scptest 上传本地目录到远程机器指定目录</li>
+</ul>
+</li>
+<li>find <ul>
+<li></li>
+<li>find / -name nginx.conf 查找根目录/是否存在nginx.conf</li>
+<li>find /home -name “*.txt” 在/home目录下查找以.txt结尾的文件名</li>
+<li>find / -size +500M 搜索大于500M的文件</li>
+</ul>
+</li>
+<li>wc<ul>
+<li></li>
+<li>wc -l 统计文本行数</li>
+<li>wc -w 统计文本字数</li>
+<li>wc -c 统计文本字节数</li>
+</ul>
+</li>
+<li>grep<ul>
+<li></li>
+<li>grep “match_pattern” file_1 file_2 file_3 … 多文件中查找包含“match_pattern”的文本行</li>
+<li>grep -c “text” file_name 统计文件或者文本中包含匹配字符串的行数</li>
+<li>echo this is a test line. | grep -o -E “[a-z]+.“ 使用正则表达式 -E</li>
+</ul>
+</li>
+<li>tree<ul>
+<li></li>
+<li>树形结构列出指定目录下的所有文件，包括子目录里的文件</li>
+</ul>
+</li>
+<li>more、less<ul>
+<li></li>
+<li>分页显示文本文件内容</li>
+</ul>
+</li>
+<li>head、tail<ul>
+<li></li>
+<li>显示文件头、尾内容</li>
+</ul>
+</li>
+<li>dd<ul>
+<li></li>
+<li>dd if=/dev/zero of=out.txt bs=10M count=1 创建一个50M的文件，文件名为out.txt</li>
+</ul>
+</li>
+<li>tar<ul>
+<li></li>
+<li>tar -cvf log.tar log2012.log 仅打包，不压缩！ </li>
+<li>tar -zcvf log.tar.gz log2012.log   打包后，以 gzip 压缩 </li>
+<li>tar -jcvf log.tar.bz2 log2012.log  打包后，以 bzip2 压缩</li>
+<li>tar -ztvf log.tar.gz 查阅tar包内有哪些文件</li>
+<li>tar -zxvf /opt/soft/test/log.tar.gz 将tar包解压缩</li>
+</ul>
+</li>
+<li>nohup<ul>
+<li></li>
+<li>nohup command &gt; myout.file 2&gt;&amp;1 &amp; stderr和stdout被重定向到myout.file文件中</li>
+<li>使用Ctrl + C发送SIGINT信号，程序关闭；关闭session发送SIGHUP信号，程序免疫；平时经常使用nohup和&amp;配合来启动程序。双同免疫</li>
+</ul>
+</li>
+</ul>
+<h1 id="系统管理命令"><a href="#系统管理命令" class="headerlink" title="系统管理命令"></a>系统管理命令</h1><ul>
+<li>du<ul>
+<li></li>
+<li><em>du -sh</em> 对文件和目录磁盘使用的空间总量的查看</li>
+</ul>
+</li>
+<li>df<ul>
+<li></li>
+<li><em>df -h</em> 显示磁盘分区上的可使用的磁盘空间</li>
+</ul>
+</li>
+<li>watch<ul>
+<li></li>
+<li><em>watch -d -n 60 “free -h”</em> 每分钟动态监测主机内存的使用情况</li>
+</ul>
+</li>
+<li>stat<br>-<ul>
+<li>显示指定文件的详细信息，比ls更详细</li>
+</ul>
+</li>
+<li>who<br>-<ul>
+<li>显示在线登陆用户</li>
+</ul>
+</li>
+<li>whoami<br>-<ul>
+<li>显示当前操作用户</li>
+</ul>
+</li>
+<li>uname<br>-<ul>
+<li><em>uname -r</em> 显示linux内核版本</li>
+</ul>
+</li>
+<li>rpm<br>-<ul>
+<li><em>rpm -qa</em> 列出所有安装过的包</li>
+<li><em>rpm -ql nfs-utils-1.3.0-0.54.el7.x86_64</em> 获取rpm包中的文件安装路径</li>
+<li><em>rpm -ivh your-package.rpm</em> 安装rpm软件包</li>
+</ul>
+</li>
+<li>ps<br>-<ul>
+<li><em>ps -ef</em> 显示瞬间进程状态 </li>
+</ul>
+</li>
+<li>alias<br>-<ul>
+<li><em>alias showmeit=”ps -aux”</em><br>命令重命名，另外解除使用unaliax showmeit</li>
+</ul>
+</li>
+<li>script<br>-<ul>
+<li><em>script -q myfile</em> 静默模式记录，exit 退出记录</li>
+</ul>
+</li>
+<li><p>crontab<br>-<br>crontab文件的含义：用户所建立的crontab文件中，每一行都代表一项任务，每行的每个字段代表一项设置，它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：minute   hour   day   month   week   command</p>
+<p><em>10 1 </em> <em> 6,0 /etc/init.d/smb restart</em> 每周六、周日的1:10重启smb</p>
+<p><strong>创建cron脚本用法</strong></p>
+<ul>
+<li>第一步，vi创建cron脚本,命名为crontest.cron，写入命令<em>0 9 </em> <em> </em> echo “Good morning.” &gt;&gt; /tmp/test.txt* 每天早上9点执行打印一次命令</li>
+<li>第二步：添加定时任务。执行命令 <em>crontab crontest.cron</em> 搞定</li>
+<li>第三步：<em>crontab -l</em> 查看定时任务是否成功或者检测/var/spool/cron下是否生成对应cron脚本</li>
+</ul>
+<p><strong>其它用法</strong></p>
+<ul>
+<li><em>crontab -r</em> 删除该用户的定时任务</li>
+<li><em>crontab -e</em> 编辑该用户的定时任务</li>
+</ul>
+</li>
+</ul>
+<h1 id="网络管理命令"><a href="#网络管理命令" class="headerlink" title="网络管理命令"></a>网络管理命令</h1><ul>
+<li>wget<ul>
+<li></li>
+<li><em>wget <a href="https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz" target="_blank" rel="noopener">https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz</a></em> 下载harbor安装包，默认会以最后一个符合/的后面的字符来命令</li>
+<li><em>wget -O harbor.tgz <a href="https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz" target="_blank" rel="noopener">https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-offline-installer-v1.7.1.tgz</a></em> 下载并以不同的文件名保存</li>
+<li><em>wget -b url</em> 后台下载</li>
+<li><em>wget -b url</em> 断电续传</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -342,18 +485,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/26/liaoxb-4/" rel="next" title="nfs服务器搭建和挂载实践">
-                <i class="fa fa-chevron-left"></i> nfs服务器搭建和挂载实践
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/27/liaoxb-5/" rel="prev" title="性能测试基础">
-                性能测试基础 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/26/liaoxb-2018.1.26md/" rel="prev" title="故障排查-linux查看程序端口占用">
+                故障排查-linux查看程序端口占用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -406,8 +545,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -458,6 +606,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用命令"><span class="nav-number">1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统管理命令"><span class="nav-number">2.</span> <span class="nav-text">系统管理命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络管理命令"><span class="nav-number">3.</span> <span class="nav-text">网络管理命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
