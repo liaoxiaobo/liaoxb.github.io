@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="prometheus,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在实际工作中，通过prometheus监控的主要对象有如下几个：  基础设施层：主要是监控k8s节点资源，如CPU,内存,网络吞吐和带宽占用,磁盘I/O和磁盘使用等指标； 中间件层：监控产品使用到的中间件（一般会独立部署在外部集群），主要有consul、mysql、nats、redis、haproxy Kubernetes集群：监控Kubernetes集群本身的关键指标 Kubernetes集群上">
+<meta name="keywords" content="prometheus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="prometheus监控实践：Kubernetes集群监控">
+<meta property="og:url" content="http://yoursite.com/2019/03/04/promtheus/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在实际工作中，通过prometheus监控的主要对象有如下几个：  基础设施层：主要是监控k8s节点资源，如CPU,内存,网络吞吐和带宽占用,磁盘I/O和磁盘使用等指标； 中间件层：监控产品使用到的中间件（一般会独立部署在外部集群），主要有consul、mysql、nats、redis、haproxy Kubernetes集群：监控Kubernetes集群本身的关键指标 Kubernetes集群上">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image1.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image2.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image3.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image4.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image5.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image6.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image7.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image8.png?raw=true">
+<meta property="og:updated_time" content="2019-03-05T06:37:01.615Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="prometheus监控实践：Kubernetes集群监控">
+<meta name="twitter:description" content="在实际工作中，通过prometheus监控的主要对象有如下几个：  基础设施层：主要是监控k8s节点资源，如CPU,内存,网络吞吐和带宽占用,磁盘I/O和磁盘使用等指标； 中间件层：监控产品使用到的中间件（一般会独立部署在外部集群），主要有consul、mysql、nats、redis、haproxy Kubernetes集群：监控Kubernetes集群本身的关键指标 Kubernetes集群上">
+<meta name="twitter:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image1.png?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/04/promtheus/">
+
+
+
+
+
+  <title>prometheus监控实践：Kubernetes集群监控 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/04/promtheus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">prometheus监控实践：Kubernetes集群监控</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-04T23:00:56+08:00">
+                2019-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在实际工作中，通过prometheus监控的主要对象有如下几个：</p>
+<ul>
+<li>基础设施层：主要是监控k8s节点资源，如CPU,内存,网络吞吐和带宽占用,磁盘I/O和磁盘使用等指标；</li>
+<li>中间件层：监控产品使用到的中间件（一般会独立部署在外部集群），主要有consul、mysql、nats、redis、haproxy</li>
+<li>Kubernetes集群：监控Kubernetes集群本身的关键指标</li>
+<li>Kubernetes集群上部署的应用：监控部署在Kubernetes集群上的应用（pod或container等）</li>
+</ul>
+<p>Step By Step，部署工作正式开始！</p>
+<h3 id="1、环境介绍"><a href="#1、环境介绍" class="headerlink" title="1、环境介绍"></a>1、环境介绍</h3><p>操作系统环境：centos linux 7.4 64bit</p>
+<p>K8S软件版本： v1.8.6</p>
+<p>Master节点IP： 192.168.1.111/24</p>
+<p>Node节点IP： 192.168.1.155/24 192.168.1.251/24</p>
+<h3 id="2、采用daemonset方式部署node-exporter组件"><a href="#2、采用daemonset方式部署node-exporter组件" class="headerlink" title="2、采用daemonset方式部署node-exporter组件"></a>2、采用daemonset方式部署node-exporter组件</h3><h4 id="2-1-部署node-exporter-yaml文件"><a href="#2-1-部署node-exporter-yaml文件" class="headerlink" title="2.1 部署node-exporter.yaml文件"></a>2.1 部署node-exporter.yaml文件</h4><p>节点上默认暴露9100端口，通过hostip:9100即可访问node-exporter的metrics</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"># cat node-exporter.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: node-exporter</span><br><span class="line">    name: node-exporter</span><br><span class="line">  name: node-exporter</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  annotations:</span><br><span class="line">    prometheus.io/scrape: &apos;true&apos;</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 9100</span><br><span class="line">    protocol: TCP</span><br><span class="line">  selector:</span><br><span class="line">    app: node-exporter</span><br><span class="line">  type: ClusterIP</span><br><span class="line">---</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: DaemonSet</span><br><span class="line">metadata:</span><br><span class="line">  name: node-exporter</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    app: node-exporter</span><br><span class="line">spec:</span><br><span class="line">  updateStrategy:</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: node-exporter</span><br><span class="line">    spec:</span><br><span class="line">      hostNetwork: true</span><br><span class="line">      containers:</span><br><span class="line">      - image: prom/node-exporter:v0.16.0</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        name: node-exporter</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 9100</span><br><span class="line">          hostPort: 9100</span><br><span class="line">          name: http</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: local-timezone</span><br><span class="line">          mountPath: &quot;/etc/localtime&quot;</span><br><span class="line">      tolerations:</span><br><span class="line">      - key: &quot;node-role.kubernetes.io/master&quot;</span><br><span class="line">        operator: &quot;Exists&quot;</span><br><span class="line">        effect: &quot;NoSchedule&quot;</span><br><span class="line">      hostPID: true</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      volumes:</span><br><span class="line">      - name: local-timezone</span><br><span class="line">        hostPath:</span><br><span class="line">          path: /etc/localtime</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-部署成功截图："><a href="#2-2-部署成功截图：" class="headerlink" title="2.2 部署成功截图："></a>2.2 部署成功截图：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@test--0005 liaoxb]# kubectl create -f node-exporter.yaml</span><br><span class="line">service &quot;node-exporter&quot; created</span><br><span class="line">daemonset &quot;node-exporter&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kcs get pods -o wide</span><br><span class="line">NAME                                  READY     STATUS    RESTARTS   AGE       IP              NODE</span><br><span class="line">kube-apiserver-test--0005             1/1       Running   0          5d        192.168.1.111   test--0005</span><br><span class="line">kube-controller-manager-test--0005    1/1       Running   0          5d        192.168.1.111   test--0005</span><br><span class="line">kube-dns-5cfc95db9f-qxk55             3/3       Running   0          5d        10.244.0.62     test--0005</span><br><span class="line">kube-flannel-ds-48xfp                 1/1       Running   0          5d        192.168.1.155   test--0006</span><br><span class="line">kube-flannel-ds-d84t5                 1/1       Running   0          5d        192.168.1.251   test--0007</span><br><span class="line">kube-flannel-ds-nm8xl                 1/1       Running   0          5d        192.168.1.111   test--0005</span><br><span class="line">kube-proxy-dxxd7                      1/1       Running   0          5d        192.168.1.155   test--0006</span><br><span class="line">kube-proxy-hfzlf                      1/1       Running   0          5d        192.168.1.251   test--0007</span><br><span class="line">kube-proxy-zw8qr                      1/1       Running   0          5d        192.168.1.111   test--0005</span><br><span class="line">kube-scheduler-test--0005             1/1       Running   0          5d        192.168.1.111   test--0005</span><br><span class="line">kubernetes-dashboard-d8b49876-2l2gx   1/1       Running   0          5d        10.244.0.63     test--0005</span><br><span class="line">node-exporter-dzsq7                   1/1       Running   0          46s       192.168.1.155   test--0006</span><br><span class="line">node-exporter-mkxrd                   1/1       Running   0          46s       192.168.1.111   test--0005</span><br><span class="line">node-exporter-s8xw2                   1/1       Running   0          46s       192.168.1.251   test--0007</span><br><span class="line">tiller-69ccbb4f7f-6dbsg               1/1       Running   0          4d        192.168.1.155   test--0006</span><br><span class="line">[root@test--0005 liaoxb]# kcs get svc -o wide |grep node-exporter</span><br><span class="line">node-exporter          ClusterIP   10.105.53.97    &lt;none&gt;        9100/TCP        1m        app=node-exporter</span><br></pre></td></tr></table></figure>
+<h3 id="3、部署prometheus组件"><a href="#3、部署prometheus组件" class="headerlink" title="3、部署prometheus组件"></a>3、部署prometheus组件</h3><h4 id="3-1-部署rbac文件"><a href="#3-1-部署rbac文件" class="headerlink" title="3.1 部署rbac文件"></a>3.1 部署rbac文件</h4><p>prometheus-rbac.yml定义了Prometheus容器访问k8s apiserver所需的ServiceAccount和ClusterRole及ClusterRoleBinding<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"># cat prometheus-rbac.yaml</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRole</span><br><span class="line">metadata:</span><br><span class="line">  name: prometheus</span><br><span class="line">rules:</span><br><span class="line">- apiGroups: [&quot;&quot;]</span><br><span class="line">  resources:</span><br><span class="line">  - nodes</span><br><span class="line">  - nodes/proxy</span><br><span class="line">  - services</span><br><span class="line">  - endpoints</span><br><span class="line">  - pods</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]</span><br><span class="line">- apiGroups:</span><br><span class="line">  - extensions</span><br><span class="line">  resources:</span><br><span class="line">  - ingresses</span><br><span class="line">  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]</span><br><span class="line">- nonResourceURLs: [&quot;/metrics&quot;]</span><br><span class="line">  verbs: [&quot;get&quot;]</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: prometheus</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: prometheus</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: prometheus</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: prometheus</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-2-部署prometheus的配置文件configmap"><a href="#3-2-部署prometheus的配置文件configmap" class="headerlink" title="3.2 部署prometheus的配置文件configmap"></a>3.2 部署prometheus的配置文件configmap</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">#cat prometheus-cm.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  name: prometheus-config</span><br><span class="line">  namespace: kube-system</span><br><span class="line">data:</span><br><span class="line">  prometheus.yml: |</span><br><span class="line">    global:</span><br><span class="line">      scrape_interval:     15s</span><br><span class="line">      evaluation_interval: 15s</span><br><span class="line">    scrape_configs:</span><br><span class="line"></span><br><span class="line">    - job_name: &apos;kubernetes-apiservers-567&apos;</span><br><span class="line">      kubernetes_sd_configs:</span><br><span class="line">      - role: endpoints</span><br><span class="line">      scheme: https</span><br><span class="line">      tls_config:</span><br><span class="line">        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt</span><br><span class="line">      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token</span><br><span class="line">      relabel_configs:</span><br><span class="line">      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]</span><br><span class="line">        action: keep</span><br><span class="line">        regex: default;kubernetes;https</span><br><span class="line"></span><br><span class="line">    - job_name: &apos;kubernetes-cadvisor-567&apos;</span><br><span class="line">      kubernetes_sd_configs:</span><br><span class="line">      - role: node</span><br><span class="line">      scheme: https</span><br><span class="line">      tls_config:</span><br><span class="line">        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt</span><br><span class="line">      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token</span><br><span class="line">      relabel_configs:</span><br><span class="line">      - action: labelmap</span><br><span class="line">        regex: __meta_kubernetes_node_label_(.+)</span><br><span class="line">      - target_label: __address__</span><br><span class="line">        replacement: kubernetes.default.svc:443</span><br><span class="line">      - source_labels: [__meta_kubernetes_node_name]</span><br><span class="line">        regex: (.+)</span><br><span class="line">        target_label: __metrics_path__</span><br><span class="line">        replacement: /api/v1/nodes/$&#123;1&#125;/proxy/metrics/cadvisor</span><br><span class="line"></span><br><span class="line">    - job_name: &apos;kubernetes-nodes-567&apos;</span><br><span class="line">      kubernetes_sd_configs:</span><br><span class="line">      - role: endpoints</span><br><span class="line">      relabel_configs:</span><br><span class="line">      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]</span><br><span class="line">        action: keep</span><br><span class="line">        regex: true</span><br><span class="line">      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]</span><br><span class="line">        action: replace</span><br><span class="line">        target_label: __scheme__</span><br><span class="line">        regex: (https?)</span><br><span class="line">      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]</span><br><span class="line">        action: replace</span><br><span class="line">        target_label: __metrics_path__</span><br><span class="line">        regex: (.+)</span><br><span class="line">      - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]</span><br><span class="line">        action: replace</span><br><span class="line">        target_label: __address__</span><br><span class="line">        regex: ([^:]+)(?::\d+)?;(\d+)</span><br><span class="line">        replacement: $1:$2</span><br><span class="line">      - action: labelmap</span><br><span class="line">        regex: __meta_kubernetes_service_label_(.+)</span><br><span class="line">      - source_labels: [__meta_kubernetes_namespace]</span><br><span class="line">        action: replace</span><br><span class="line">        target_label: kubernetes_namespace</span><br><span class="line">      - source_labels: [__meta_kubernetes_service_name]</span><br><span class="line">        action: replace</span><br><span class="line">        target_label: kubernetes_name</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-部署Prometheus-deployment-文件"><a href="#3-3-部署Prometheus-deployment-文件" class="headerlink" title="3.3 部署Prometheus deployment 文件"></a>3.3 部署Prometheus deployment 文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"># cat prometheus-deploy.yaml</span><br><span class="line">apiVersion: apps/v1beta2</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    name: prometheus-deployment</span><br><span class="line">  name: prometheus</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: prometheus</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: prometheus</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - image: prom/prometheus:v2.7.1</span><br><span class="line">        name: prometheus</span><br><span class="line">        command:</span><br><span class="line">        - &quot;/bin/prometheus&quot;</span><br><span class="line">        args:</span><br><span class="line">        - &quot;--config.file=/etc/prometheus/prometheus.yml&quot;</span><br><span class="line">        - &quot;--storage.tsdb.path=/prometheus&quot;</span><br><span class="line">        - &quot;--storage.tsdb.retention=24h&quot;</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 9090</span><br><span class="line">          protocol: TCP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: &quot;/prometheus&quot;</span><br><span class="line">          name: data</span><br><span class="line">        - mountPath: &quot;/etc/prometheus&quot;</span><br><span class="line">          name: config-volume</span><br><span class="line">        resources:</span><br><span class="line">          requests:</span><br><span class="line">            cpu: 100m</span><br><span class="line">            memory: 100Mi</span><br><span class="line">          limits:</span><br><span class="line">            cpu: 500m</span><br><span class="line">            memory: 2500Mi</span><br><span class="line">      serviceAccountName: prometheus</span><br><span class="line">      imagePullSecrets:</span><br><span class="line">        - name: regsecret</span><br><span class="line">      volumes:</span><br><span class="line">      - name: data</span><br><span class="line">        hostPath:</span><br><span class="line">           path: /prometheus</span><br><span class="line">      - name: config-volume</span><br><span class="line">        configMap:</span><br><span class="line">          name: prometheus-config</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-部署Prometheus-svc-文件"><a href="#3-4-部署Prometheus-svc-文件" class="headerlink" title="3.4 部署Prometheus svc 文件"></a>3.4 部署Prometheus svc 文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#cat prometheus-svc.yaml</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: prometheus</span><br><span class="line">  name: prometheus</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 9090</span><br><span class="line">    targetPort: 9090</span><br><span class="line">    nodePort: 32002</span><br><span class="line">  selector:</span><br><span class="line">    app: prometheus</span><br></pre></td></tr></table></figure>
+<h4 id="3-5-部署成功截图："><a href="#3-5-部署成功截图：" class="headerlink" title="3.5 部署成功截图："></a>3.5 部署成功截图：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@test--0005 liaoxb]# kubectl create -f prometheus-rbac.yaml</span><br><span class="line">clusterrole &quot;prometheus&quot; created</span><br><span class="line">serviceaccount &quot;prometheus&quot; created</span><br><span class="line">clusterrolebinding &quot;prometheus&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kubectl create -f prometheus-cm.yaml</span><br><span class="line">configmap &quot;prometheus-config&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kubectl create -f prometheus-deploy.yaml</span><br><span class="line">deployment &quot;prometheus&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kubectl create -f prometheus-svc.yaml</span><br><span class="line">service &quot;prometheus&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kcs get pods -o wide |grep prometheus</span><br><span class="line">prometheus-78c8788f44-cmt9g           1/1       Running   0          32s       10.244.2.32     test--0007</span><br></pre></td></tr></table></figure>
+<p>通过prometheus节点加上nodeport即可访问prometheus web页面，target页面可看见prometheus已经成功连接上监控的job；此时prometheus就可以拉取并存储每个job采集的时序数据，Graph界面上提供了基本的查询K8S集群中每个POD的CPU使用情况，PromQL查询条件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sum by (pod_name)( rate(container_cpu_usage_seconds_total&#123;image!=&quot;&quot;, pod_name!=&quot;&quot;&#125;[1m] ) )</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>prometheus节点ip:32002访问prometheus ui</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image1.png?raw=true" alt="prometheus节点ip:32002访问prometheus ui"></p>
+<blockquote>
+<p>PromQL查询数据</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image2.png?raw=true" alt="image"></p>
+<h3 id="4、部署Grafana组件"><a href="#4、部署Grafana组件" class="headerlink" title="4、部署Grafana组件"></a>4、部署Grafana组件</h3><h4 id="4-1-部署grafana-yaml"><a href="#4-1-部署grafana-yaml" class="headerlink" title="4.1 部署grafana.yaml"></a>4.1 部署grafana.yaml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#cat grafana.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: grafana</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 3000</span><br><span class="line">    targetPort: 3000</span><br><span class="line">    nodePort: 32003</span><br><span class="line">  selector:</span><br><span class="line">    app: grafana</span><br><span class="line">---</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    app: grafana</span><br><span class="line">  name: grafana</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  revisionHistoryLimit: 2</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: grafana</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - image: grafana/grafana:4.2.0</span><br><span class="line">        name: grafana</span><br><span class="line">        imagePullPolicy: Always</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 3000</span><br><span class="line">        env:</span><br><span class="line">          - name: GF_AUTH_BASIC_ENABLED</span><br><span class="line">            value: &quot;true&quot;</span><br><span class="line">          - name: GF_AUTH_ANONYMOUS_ENABLED</span><br><span class="line">            value: &quot;false&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@test--0005 liaoxb]# kubectl create -f grafana.yaml</span><br><span class="line">service &quot;grafana&quot; created</span><br><span class="line">deployment &quot;grafana&quot; created</span><br><span class="line">[root@test--0005 liaoxb]# kcs get pods -o wide |grep grafana</span><br><span class="line">grafana-f9f5975f8-mv74b               1/1       Running   0          24s       10.244.1.32     test--0006</span><br><span class="line">[root@test--0005 liaoxb]# kcs get svc -o wide |grep grafana</span><br><span class="line">grafana                NodePort    10.102.160.34    &lt;none&gt;        3000:32003/TCP   42s       app=grafana</span><br></pre></td></tr></table></figure>
+<p>此时就可以通过grafana节点ip:32003访问grafana web页面，账户密码默认都是admin；</p>
+<h4 id="4-2-grafana配置数据源为prometheus"><a href="#4-2-grafana配置数据源为prometheus" class="headerlink" title="4.2 grafana配置数据源为prometheus"></a>4.2 grafana配置数据源为prometheus</h4><p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image3.png?raw=true" alt="image"></p>
+<h4 id="4-3-导入监控Dashboard"><a href="#4-3-导入监控Dashboard" class="headerlink" title="4.3 导入监控Dashboard"></a>4.3 导入监控Dashboard</h4><p>使用<a href="https://grafana.com/dashboards/162" target="_blank" rel="noopener">Kubernetes cluster monitoring (via Prometheus)</a>这个即可</p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image4.png?raw=true" alt="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image4.png?raw=true"></p>
+<h4 id="4-4-Dashboard数据展示"><a href="#4-4-Dashboard数据展示" class="headerlink" title="4.4 Dashboard数据展示"></a>4.4 Dashboard数据展示</h4><blockquote>
+<p>主机监控数据展示</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image5.png?raw=true" alt="image"></p>
+<blockquote>
+<p>pod和container数据展示</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image6.png?raw=true" alt="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image6.png?raw=true"></p>
+<h3 id="5、Kubernetes集群上部署应用的监控"><a href="#5、Kubernetes集群上部署应用的监控" class="headerlink" title="5、Kubernetes集群上部署应用的监控"></a>5、Kubernetes集群上部署应用的监控</h3><p>Kubernetes集群上Pod, DaemonSet, Deployment, Job, CronJob等各种资源对象的状态需要监控，这也反映了使用这些资源部署的应用的状态。但通过查看前面Prometheus从k8s集群拉取的指标(这些指标主要来自apiserver和kubelet中集成的cAdvisor)，并没有具体的各种资源对象的状态指标。对于Prometheus来说，当然是需要引入新的exporter来暴露这些指标，Kubernetes提供了一个kube-state-metrics正式我们需要。</p>
+<h4 id="5-1-在Kubernetes上部署kube-state-metrics组件"><a href="#5-1-在Kubernetes上部署kube-state-metrics组件" class="headerlink" title="5.1 在Kubernetes上部署kube-state-metrics组件"></a>5.1 在Kubernetes上部署kube-state-metrics组件</h4><p><a href="https://github.com/kubernetes/kube-state-metrics.git" target="_blank" rel="noopener">https://github.com/kubernetes/kube-state-metrics.git</a></p>
+<p>kube-state-metrics/kubernetes目录下，有所需要的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@test--0005 liaoxb]# kubectl create -f kube-state-metrics/kubernetes/</span><br><span class="line">clusterrolebinding &quot;kube-state-metrics&quot; created</span><br><span class="line">clusterrole &quot;kube-state-metrics&quot; created</span><br><span class="line">deployment &quot;kube-state-metrics&quot; created</span><br><span class="line">rolebinding &quot;kube-state-metrics&quot; created</span><br><span class="line">role &quot;kube-state-metrics-resizer&quot; created</span><br><span class="line">serviceaccount &quot;kube-state-metrics&quot; created</span><br><span class="line">service &quot;kube-state-metrics&quot; created</span><br></pre></td></tr></table></figure></p>
+<p>将kube-state-metrics部署到Kubernetes上之后，就会发现Kubernetes集群中的Prometheus会在kubernetes-nodes-567这个job下自动服务发现kube-state-metrics，并开始拉取metrics。这是因为prometheus-cm.yml中Prometheus的配置文件job kubernetes-nodes-567的配置。而部署kube-state-metrics的定义文件kube-state-metrics-service.yaml对kube-state-metrics Service的定义包含annotation prometheus.io/scrape: ‘true’，因此kube-state-metrics的endpoint可以被Prometheus自动服务发现</p>
+<blockquote>
+<p>查询k8s集群中deploy的个数：</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image7.png?raw=true" alt="image"></p>
+<h3 id="6、中间件监控"><a href="#6、中间件监控" class="headerlink" title="6、中间件监控"></a>6、中间件监控</h3><p>关于中间件的exporter部署请自行在prometheus项目中查找<br><a href="https://github.com/prometheus" target="_blank" rel="noopener">https://github.com/prometheus</a><br>最主要的关键点是配置好prometheus.yml文件，在configmap中追加如下格式内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">- job_name: consul</span><br><span class="line">  scrape_interval: 30s</span><br><span class="line">  scrape_timeout: 30s</span><br><span class="line">  metrics_path: /metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets:</span><br><span class="line">    - 192.168.1.111:9107</span><br><span class="line">    - 192.168.1.155:9107</span><br><span class="line">    - 192.168.1.251:9107</span><br><span class="line">- job_name: haproxy</span><br><span class="line">  scrape_interval: 30s</span><br><span class="line">  scrape_timeout: 30s</span><br><span class="line">  metrics_path: /metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets:</span><br><span class="line">    - 192.168.1.111:9101</span><br><span class="line">- job_name: mysql</span><br><span class="line">  scrape_interval: 30s</span><br><span class="line">  scrape_timeout: 30s</span><br><span class="line">  metrics_path: /metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets:</span><br><span class="line">    - 192.168.1.111:9104</span><br><span class="line">    - 192.168.1.155:9104</span><br><span class="line">    - 192.168.1.251:9104</span><br><span class="line">- job_name: nats</span><br><span class="line">  scrape_interval: 30s</span><br><span class="line">  scrape_timeout: 30s</span><br><span class="line">  metrics_path: /metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets:</span><br><span class="line">    - 192.168.1.111:7777</span><br><span class="line">    - 192.168.1.155:7777</span><br><span class="line">    - 192.168.1.251:7777</span><br><span class="line">- job_name: redis</span><br><span class="line">  scrape_interval: 30s</span><br><span class="line">  scrape_timeout: 30s</span><br><span class="line">  metrics_path: /metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets:</span><br><span class="line">    - 192.168.1.155:9121</span><br></pre></td></tr></table></figure>
+<p>prometheus-cm.yaml里job追加配置成功后，需要kubectl apply -f prometheus-cm.yaml，并且重启prometheus实例；重启成功后在target页面就可以看见新增加的中间件job采集项。</p>
+<blockquote>
+<p>consul haproxy等中间件采集job</p>
+</blockquote>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2019.3.4/image8.png?raw=true" alt="image"></p>
+<p>部署实践小结：</p>
+<ul>
+<li>至此，我们就能通过grafana能够展示基础设施层、Kubernetes集群自身的监控数据指标，比如cpu、内存、网络IO等（数据采集组件分别是node-exporter、cadvisor）</li>
+<li>Kubernetes集群上部署应用的监控，尤其是对应用状态的监控，主要是采用kube-state-metrics组件的指标，这是对以上组件很好的补充</li>
+<li>中间件监控，主要是部署各自的exporter容器，暴露固定端口以供prometheus拉取监控metrics数据</li>
+</ul>
+<p>参考链接：</p>
+<p><a href="https://www.kubernetes.org.cn/3418.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/3418.html</a></p>
+<p><a href="https://github.com/prometheus" target="_blank" rel="noopener">https://github.com/prometheus</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/20/performance-test/" rel="next" title="性能测试基础">
+                <i class="fa fa-chevron-left"></i> 性能测试基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、环境介绍"><span class="nav-number">1.</span> <span class="nav-text">1、环境介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、采用daemonset方式部署node-exporter组件"><span class="nav-number">2.</span> <span class="nav-text">2、采用daemonset方式部署node-exporter组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-部署node-exporter-yaml文件"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 部署node-exporter.yaml文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-部署成功截图："><span class="nav-number">2.2.</span> <span class="nav-text">2.2 部署成功截图：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、部署prometheus组件"><span class="nav-number">3.</span> <span class="nav-text">3、部署prometheus组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-部署rbac文件"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 部署rbac文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-部署prometheus的配置文件configmap"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 部署prometheus的配置文件configmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-部署Prometheus-deployment-文件"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 部署Prometheus deployment 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-部署Prometheus-svc-文件"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 部署Prometheus svc 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-部署成功截图："><span class="nav-number">3.5.</span> <span class="nav-text">3.5 部署成功截图：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、部署Grafana组件"><span class="nav-number">4.</span> <span class="nav-text">4、部署Grafana组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-部署grafana-yaml"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 部署grafana.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-grafana配置数据源为prometheus"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 grafana配置数据源为prometheus</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-导入监控Dashboard"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 导入监控Dashboard</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-Dashboard数据展示"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Dashboard数据展示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、Kubernetes集群上部署应用的监控"><span class="nav-number">5.</span> <span class="nav-text">5、Kubernetes集群上部署应用的监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-在Kubernetes上部署kube-state-metrics组件"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 在Kubernetes上部署kube-state-metrics组件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、中间件监控"><span class="nav-number">6.</span> <span class="nav-text">6、中间件监控</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

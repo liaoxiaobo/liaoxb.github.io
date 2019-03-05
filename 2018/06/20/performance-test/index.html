@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能测试,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="对于不同类型的系统，软件性能的关注点各不相同，比如：  Web 类应用和手机端应用，一般以终端用户感受到的端到端的响应时间来描述系统的性能； 非交互式的应用，比如典型的电信和银行后台处理系统，响应时间关注更多的是事件处理的速度，以及单位时间的事件吞吐量。  从开发人员视角关注软件性能在软件设计开发人员眼中，软件性能通常会包含算法设计、架构设计、性能最佳实践、数据库相关、软件性能的可测试性这五大方面">
+<meta name="keywords" content="性能测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能测试基础">
+<meta property="og:url" content="http://yoursite.com/2018/06/20/performance-test/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="对于不同类型的系统，软件性能的关注点各不相同，比如：  Web 类应用和手机端应用，一般以终端用户感受到的端到端的响应时间来描述系统的性能； 非交互式的应用，比如典型的电信和银行后台处理系统，响应时间关注更多的是事件处理的速度，以及单位时间的事件吞吐量。  从开发人员视角关注软件性能在软件设计开发人员眼中，软件性能通常会包含算法设计、架构设计、性能最佳实践、数据库相关、软件性能的可测试性这五大方面">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-04T06:19:59.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能测试基础">
+<meta name="twitter:description" content="对于不同类型的系统，软件性能的关注点各不相同，比如：  Web 类应用和手机端应用，一般以终端用户感受到的端到端的响应时间来描述系统的性能； 非交互式的应用，比如典型的电信和银行后台处理系统，响应时间关注更多的是事件处理的速度，以及单位时间的事件吞吐量。  从开发人员视角关注软件性能在软件设计开发人员眼中，软件性能通常会包含算法设计、架构设计、性能最佳实践、数据库相关、软件性能的可测试性这五大方面">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/20/performance-test/">
+
+
+
+
+
+  <title>性能测试基础 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/20/performance-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">性能测试基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-20T00:00:55+08:00">
+                2018-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于不同类型的系统，软件性能的关注点各不相同，比如：</p>
+<ul>
+<li>Web 类应用和手机端应用，一般以终端用户感受到的端到端的响应时间来描述系统的性能；</li>
+<li>非交互式的应用，比如典型的电信和银行后台处理系统，响应时间关注更多的是事件处理的速度，以及单位时间的事件吞吐量。</li>
+</ul>
+<h3 id="从开发人员视角关注软件性能"><a href="#从开发人员视角关注软件性能" class="headerlink" title="从开发人员视角关注软件性能"></a>从开发人员视角关注软件性能</h3><p>在软件设计开发人员眼中，软件性能通常会包含算法设计、架构设计、性能最佳实践、数据库相关、软件性能的可测试性这五大方面。其中，每个方面关注的点，也包括很多。</p>
+<p>第一，算法设计包含的点：<br>核心算法的设计与实现是否高效；<br>必要时，设计上是否采用 buffer 机制以提高性能，降低 I/O；<br>是否存在潜在的内存泄露；<br>是否存在并发环境下的线程安全问题；<br>是否存在不合理的线程同步方式；<br>是否存在不合理的资源竞争。</p>
+<p>第二，架构设计包含的内容：<br>站在整体系统的角度，是否可以方便地进行系统容量和性能扩展；<br>应用集群的可扩展性是否经过测试和验证；<br>缓存集群的可扩展性是否经过测试和验证；<br>数据库的可扩展性是否经过测试和验证。</p>
+<p>第三，性能最佳实践包含的点：<br>代码实现是否遵守开发语言的性能最佳实践；<br>关键代码是否在白盒级别进行性能测试；<br>是否考虑前端性能的优化；<br>必要的时候是否采用数据压缩传输；<br>对于既要压缩又要加密的场景，是否采用先压缩后加密的顺序。</p>
+<p>第四，数据库相关的点：<br>数据库表设计是否高效；<br>是否引入必要的索引；<br>SQL 语句的执行计划是否合理；<br>SQL 语句除了功能是否要考虑性能要求；<br>数据库是否需要引入读写分离机制；<br>系统冷启动后，缓存大量不命中的时候，数据库承载的压力是否超负荷。</p>
+<p>第五，软件性能的可测试性包含的点：<br>是否为性能分析（Profiler）提供必要的接口支持；<br>是否支持高并发场景下的性能打点；<br>是否支持全链路的性能分析。</p>
+<h3 id="性能测试常用衡量指标"><a href="#性能测试常用衡量指标" class="headerlink" title="性能测试常用衡量指标"></a>性能测试常用衡量指标</h3><h4 id="并发用户数"><a href="#并发用户数" class="headerlink" title="并发用户数"></a>并发用户数</h4><ul>
+<li><strong>业务层面的并发用户数</strong>，指的是实际使用系统的用户总数。但是单靠这个指标并不能反映系统实际承载的压力，我们还要结合用户行为模型才能得到系统实际承载的压力。</li>
+<li><strong>后端服务器层面的并发用户数</strong>，指的是“同时向服务器发送请求的数量”，直接反映了系统实际承载的压力。</li>
+</ul>
+<p><em>场景举例：<br>一个已经投入运行的 ERP 系统，该系统所在企业共有 5000 名员工并都拥有账号，也就是说这个系统有 5000 个潜在用户。根据系统日志分析得知，该系统最大在线用户数是 2500 人。</em></p>
+<p><strong>业务层面的并发用户数</strong>=2500人 （此数值仅仅表明在最高峰时段有 2500 个用户登录了系统，而服务器所承受的实际压力取决于登录用户行为，所以它不能准确反映服务器此时此刻实际承载的压力）</p>
+<p><em>用户行为分析建模：<br>假设在某一时间点上，这 2500 个用户中，30% 用户处于页面浏览状态（对服务器没有发起请求），20% 用户在填写订单（也没有对服务器发起请求），5% 用户在递交订单，15% 用户在查询订单，而另外的 30% 用户没有进行任何操作。</em></p>
+<p><strong>后端服务器层面的并发用户数</strong>=500人（这 2500 个“并发用户”中真正对服务器产生压力的只有 500 个用户（（5%+15%）*2500=500））。</p>
+<p>从这个例子可以看出，后端服务器层面的并发用户数，同时取决于业务层面并发用户数和用户行为模式，而且用户行为模式占的比重较大。因此，分析得到准确的用户行为模式，是性能测试中的关键一环。获得精准的用户行为模式，是除了获取性能需求外，最困难的工作。</p>
+<p>####响应时间 RT<br>RT：处理一次请求所需要的平均处理时间<br>响应时间是终端用户对系统性能的最直观印象，包括系统响应时间和前端展现时间</p>
+<ul>
+<li>系统响应时间又可以进一步细分为后台系统处理时间、数据库处理时间和网络传输时间等；</li>
+<li>前端展现时间，取决于客户端收到服务器返回的数据后渲染页面所消耗的时间</li>
+</ul>
+<p>####系统吞吐率 TPS<br>TPS：每秒钟处理完的事务次数，即吞吐率；一般TPS是对整个系统来讲的。一个应用系统1s能完成多少事务处理，一个事务在分布式处理中，可能会对应多个请求，对于衡量单个接口服务的处理能力，用QPS比较多</p>
+<h4 id="QPS"><a href="#QPS" class="headerlink" title="QPS"></a>QPS</h4><p>QPS: 服务器一秒钟处理完请求的数量；注意这里是处理完。具体是指发出请求到服务器处理完成功返回结果。可以理解在server中有个counter，每处理一个请求加1，1秒后 counter=QPS<br>计算公式：QPS = 并发用户数 / 平均响应时间</p>
+<p><em>举个列子：<br>如果一次性可以处理100个请求并发量，每个请求耗时100毫秒，则qps = 1000<br>如果一次性可以处理50个请求并发量，每个请求耗时200毫秒，则qps = 250<br>所以QPS与单个请求处理时间以及服务器一次性可以处理多少请求是成比例关系的</em></p>
+<p>部分内容参考极客时间: <a href="https://time.geekbang.org/column/article/14577#previewimg" target="_blank" rel="noopener">https://time.geekbang.org/column/article/14577#previewimg</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/性能测试/" rel="tag"># 性能测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/26/nfs-install/" rel="next" title="nfs服务器搭建和挂载实践">
+                <i class="fa fa-chevron-left"></i> nfs服务器搭建和挂载实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/04/promtheus/" rel="prev" title="prometheus监控实践：Kubernetes集群监控">
+                prometheus监控实践：Kubernetes集群监控 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#从开发人员视角关注软件性能"><span class="nav-number">1.</span> <span class="nav-text">从开发人员视角关注软件性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能测试常用衡量指标"><span class="nav-number">2.</span> <span class="nav-text">性能测试常用衡量指标</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#并发用户数"><span class="nav-number">2.1.</span> <span class="nav-text">并发用户数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#QPS"><span class="nav-number">2.2.</span> <span class="nav-text">QPS</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

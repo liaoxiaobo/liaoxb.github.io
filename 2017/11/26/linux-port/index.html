@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="linux,">
 
 
 
@@ -79,13 +79,21 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/linux/index.html">
+<meta name="description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="故障排查-linux查看程序端口占用">
+<meta property="og:url" content="http://yoursite.com/2017/11/26/linux-port/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-05T06:54:01.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="故障排查-linux查看程序端口占用">
+<meta name="twitter:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -115,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/linux/">
+  <link rel="canonical" href="http://yoursite.com/2017/11/26/linux-port/">
 
 
 
 
 
-  <title>Tag: linux | Hexo</title>
+  <title>故障排查-linux查看程序端口占用 | Hexo</title>
   
 
 
@@ -140,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,130 +222,155 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>linux<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/26/linux-port/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/05/26/nfs-install/" itemprop="url">
-              
-                <span itemprop="name">nfs服务器搭建和挂载实践</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">故障排查-linux查看程序端口占用</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-05-26T23:30:56+08:00" content="2018-05-26">
-          05-26
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-26T23:00:56+08:00">
+                2017-11-26
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/27/linux-port-test/" itemprop="url">
-              
-                <span itemprop="name">故障排查-linux命令测试端口连通性</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-11-27T23:30:56+08:00" content="2017-11-27">
-          11-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/26/linux-port/" itemprop="url">
-              
-                <span itemprop="name">故障排查-linux查看程序端口占用</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-11-26T23:00:56+08:00" content="2017-11-26">
-          11-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/05/linux-base/" itemprop="url">
-              
-                <span itemprop="name">linux实用命令</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-07-05T23:02:56+08:00" content="2017-07-05">
-          07-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <p>1、安装net-tools命令行工具 yum install -y net-tools<br>2、执行命令查看被占用端口的pid netstat -anlp | grep port<br>如下图，发现本机8083端口被22980的程序wisecloud-met所占用</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
+<p>3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道8083端口是被哪个程序占用了！然后判断是否使用KILL命令干掉！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2.png"></p>
+<p>知识拓展：<a href="https://www.cnblogs.com/wonux/p/6268134.html" target="_blank" rel="noopener">Linux网络管理常用命令：net-tools VS iproute2</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/05/linux-base/" rel="next" title="linux实用命令">
+                <i class="fa fa-chevron-left"></i> linux实用命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/27/linux-port-test/" rel="prev" title="故障排查-linux命令测试端口连通性">
+                故障排查-linux命令测试端口连通性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -345,6 +378,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -550,6 +587,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
