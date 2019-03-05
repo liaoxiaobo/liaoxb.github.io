@@ -95,7 +95,7 @@
 <meta property="og:image" content="https://note.youdao.com/yws/public/resource/91718186498c33d5c359e2eea799005f/xmlnote/B966232C596744C0B075C13C2595C727/7527">
 <meta property="og:image" content="https://note.youdao.com/yws/public/resource/91718186498c33d5c359e2eea799005f/xmlnote/5946612E3CE24157879F7A9ADAE254CD/7592">
 <meta property="og:image" content="https://note.youdao.com/yws/public/resource/91718186498c33d5c359e2eea799005f/xmlnote/157D82655FA34D56BA7719C84557B1C3/7608">
-<meta property="og:updated_time" content="2019-03-04T12:14:29.868Z">
+<meta property="og:updated_time" content="2019-03-05T03:37:40.893Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="prometheus监控实践：Kubernetes集群监控">
 <meta name="twitter:description" content="在实际工作中，通过prometheus监控的主要对象有如下几个：  基础设施层：主要是监控k8s节点资源，如CPU,内存,网络吞吐和带宽占用,磁盘I/O和磁盘使用等指标； 中间件层：监控产品使用到的中间件（一般会独立部署在外部集群），主要有consul、mysql、nats、redis、haproxy Kubernetes集群：监控Kubernetes集群本身的关键指标 Kubernetes集群上">
@@ -357,6 +357,9 @@
 <li>Kubernetes集群上部署应用的监控，尤其是对应用状态的监控，主要是采用kube-state-metrics组件的指标，这是对以上组件很好的补充</li>
 <li>中间件监控，主要是部署各自的exporter容器，暴露固定端口以供prometheus拉取监控metrics数据</li>
 </ul>
+<p>参考链接：</p>
+<p><a href="https://www.kubernetes.org.cn/3418.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/3418.html</a></p>
+<p><a href="https://github.com/prometheus" target="_blank" rel="noopener">https://github.com/prometheus</a></p>
 
       
     </div>
