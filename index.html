@@ -229,6 +229,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/05/eclipse-pydev/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/05/eclipse-pydev/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-05T15:17:49+08:00">
+                2019-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>title: 搭建python开发环境（ Eclipse+PyDev）<br>date: 2018-06-05 23:02:56<br>tags: linux</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><h2 id="一-安装python"><a href="#一-安装python" class="headerlink" title="一. 安装python"></a>一. 安装python</h2><ol>
+<li><a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Install python 2.7.x for Windows</a></li>
+<li>Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)  </li>
+<li><p>Windows命令行中测试python环境变量是否设置成功</p>
+<pre><code>C:\Users\Administrator&gt;python
+Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:40:30) [MSC v.1500 64 bit (
+AMD64)] on win32
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt;
+</code></pre><h2 id="二-安装eclipse"><a href="#二-安装eclipse" class="headerlink" title="二. 安装eclipse"></a>二. 安装eclipse</h2></li>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">Install JDK</a></li>
+<li>java环境变量配置</li>
+<li><a href="https://www.eclipse.org/downloads//" target="_blank" rel="noopener">Install eclipse *.zip for Windows</a>.</li>
+<li>解压zip包，运行eclipse.exe<h2 id="三-安装PyDev插件"><a href="#三-安装PyDev插件" class="headerlink" title="三. 安装PyDev插件"></a>三. 安装PyDev插件</h2></li>
+</ol>
+<ul>
+<li>方法一：下载python for eclipse  </li>
+</ul>
+<ol>
+<li><p>下载地址:<a href="https://download.csdn.net/download/q52wow/2872235" target="_blank" rel="noopener">https://download.csdn.net/download/q52wow/2872235</a><br>如：org.python.pydev.feature-1.6.3.2010100513.zip</p>
+</li>
+<li><p>解压pydev插件后，会发现有features、plugins两个文件夹，然后把features文件夹下的文件移到D:\dev\eclipse\features目录下，把plugins文件夹下的文件移到D:\dev\eclipse\plugins目录下。 注意：D:\dev\eclipse\为eclipse安装目录</p>
+</li>
+<li><p>重启eclipse，在windows-&gt;preferences出现PyDev配置项，表示PyDev插件安装成功。</p>
+</li>
+</ol>
+<ul>
+<li>方法二：从 Eclipse Marketplace  中下载安装 pydev</li>
+</ul>
+<ol>
+<li>打开  Help -&gt; Eclipse Marketplace</li>
+<li>在搜索框里填入 pydev，就可以找到 pydev，然后点击 Install  按钮即可安装</li>
+</ol>
+<ul>
+<li>方法三：从官网下载安装 pydev</li>
+</ul>
+<ol>
+<li>点击Help-&gt;Install New Software…   在弹出的对话框中，点Add 按钮。  Name中填:Pydev,  Location中填<a href="http://pydev.org/updates" target="_blank" rel="noopener">http://pydev.org/updates</a></li>
+</ol>
+<h2 id="四-配置PyDev插件"><a href="#四-配置PyDev插件" class="headerlink" title="四. 配置PyDev插件"></a>四. 配置PyDev插件</h2><ol>
+<li>windows-&gt;preferences-&gt;PyDev-&gt;Interpreter - Python，New一个Python解释器，填上解释器名字和路径，路径选相应的python.exe  </li>
+</ol>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image1.png?raw=true" alt="image"></p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image2.png?raw=true" alt="image"></p>
+<ol start="2">
+<li>General-&gt;Editors-&gt;Text Editors-&gt;Spelling，Encoding改成Other:UTF-8</li>
+<li>General-&gt;Workspace，Text file encoding改成Other:UTF-8 至此，PyDev的配置就完成了。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/04/promtheus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1250,7 +1419,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

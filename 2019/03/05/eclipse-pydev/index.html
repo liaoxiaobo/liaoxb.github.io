@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="linux,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,21 +79,20 @@
 
 
 
-<meta name="description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
-<meta name="keywords" content="linux">
+<meta name="description" content="title: 搭建python开发环境（ Eclipse+PyDev）date: 2018-06-05 23:02:56tags: linux 目录一. 安装python Install python 2.7.x for Windows Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)   Windows命令行中测">
 <meta property="og:type" content="article">
-<meta property="og:title" content="故障排查-linux查看程序端口占用">
-<meta property="og:url" content="http://yoursite.com/2017/11/26/linux-port/index.html">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/2019/03/05/eclipse-pydev/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
+<meta property="og:description" content="title: 搭建python开发环境（ Eclipse+PyDev）date: 2018-06-05 23:02:56tags: linux 目录一. 安装python Install python 2.7.x for Windows Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)   Windows命令行中测">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-03-05T06:54:01.530Z">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image1.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image2.png?raw=true">
+<meta property="og:updated_time" content="2019-03-14T21:36:00.838Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="故障排查-linux查看程序端口占用">
-<meta name="twitter:description" content="1、安装net-tools命令行工具 yum install -y net-tools2、执行命令查看被占用端口的pid netstat -anlp | grep port如下图，发现本机8083端口被22980的程序wisecloud-met所占用  3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="title: 搭建python开发环境（ Eclipse+PyDev）date: 2018-06-05 23:02:56tags: linux 目录一. 安装python Install python 2.7.x for Windows Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)   Windows命令行中测">
+<meta name="twitter:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image1.png?raw=true">
 
 
 
@@ -123,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/26/linux-port/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/05/eclipse-pydev/">
 
 
 
 
 
-  <title>故障排查-linux查看程序端口占用 | Hexo</title>
+  <title> | Hexo</title>
   
 
 
@@ -236,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/26/linux-port/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/05/eclipse-pydev/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -253,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">故障排查-linux查看程序端口占用</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -265,8 +264,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-26T23:00:56+08:00">
-                2017-11-26
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-05T15:17:49+08:00">
+                2019-03-05
               </time>
             
 
@@ -303,11 +302,56 @@
       
 
       
-        <p>1、安装net-tools命令行工具 yum install -y net-tools<br>2、执行命令查看被占用端口的pid netstat -anlp | grep port<br>如下图，发现本机8083端口被22980的程序wisecloud-met所占用</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
-<p>3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道8083端口是被哪个程序占用了！然后判断是否使用KILL命令干掉！</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2.png"></p>
-<p>知识拓展：<a href="https://www.cnblogs.com/wonux/p/6268134.html" target="_blank" rel="noopener">Linux网络管理常用命令：net-tools VS iproute2</a></p>
+        <hr>
+<p>title: 搭建python开发环境（ Eclipse+PyDev）<br>date: 2018-06-05 23:02:56<br>tags: linux</p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><h2 id="一-安装python"><a href="#一-安装python" class="headerlink" title="一. 安装python"></a>一. 安装python</h2><ol>
+<li><a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Install python 2.7.x for Windows</a></li>
+<li>Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)  </li>
+<li><p>Windows命令行中测试python环境变量是否设置成功</p>
+<pre><code>C:\Users\Administrator&gt;python
+Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:40:30) [MSC v.1500 64 bit (
+AMD64)] on win32
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt;
+</code></pre><h2 id="二-安装eclipse"><a href="#二-安装eclipse" class="headerlink" title="二. 安装eclipse"></a>二. 安装eclipse</h2></li>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">Install JDK</a></li>
+<li>java环境变量配置</li>
+<li><a href="https://www.eclipse.org/downloads//" target="_blank" rel="noopener">Install eclipse *.zip for Windows</a>.</li>
+<li>解压zip包，运行eclipse.exe<h2 id="三-安装PyDev插件"><a href="#三-安装PyDev插件" class="headerlink" title="三. 安装PyDev插件"></a>三. 安装PyDev插件</h2></li>
+</ol>
+<ul>
+<li>方法一：下载python for eclipse  </li>
+</ul>
+<ol>
+<li><p>下载地址:<a href="https://download.csdn.net/download/q52wow/2872235" target="_blank" rel="noopener">https://download.csdn.net/download/q52wow/2872235</a><br>如：org.python.pydev.feature-1.6.3.2010100513.zip</p>
+</li>
+<li><p>解压pydev插件后，会发现有features、plugins两个文件夹，然后把features文件夹下的文件移到D:\dev\eclipse\features目录下，把plugins文件夹下的文件移到D:\dev\eclipse\plugins目录下。 注意：D:\dev\eclipse\为eclipse安装目录</p>
+</li>
+<li><p>重启eclipse，在windows-&gt;preferences出现PyDev配置项，表示PyDev插件安装成功。</p>
+</li>
+</ol>
+<ul>
+<li>方法二：从 Eclipse Marketplace  中下载安装 pydev</li>
+</ul>
+<ol>
+<li>打开  Help -&gt; Eclipse Marketplace</li>
+<li>在搜索框里填入 pydev，就可以找到 pydev，然后点击 Install  按钮即可安装</li>
+</ol>
+<ul>
+<li>方法三：从官网下载安装 pydev</li>
+</ul>
+<ol>
+<li>点击Help-&gt;Install New Software…   在弹出的对话框中，点Add 按钮。  Name中填:Pydev,  Location中填<a href="http://pydev.org/updates" target="_blank" rel="noopener">http://pydev.org/updates</a></li>
+</ol>
+<h2 id="四-配置PyDev插件"><a href="#四-配置PyDev插件" class="headerlink" title="四. 配置PyDev插件"></a>四. 配置PyDev插件</h2><ol>
+<li>windows-&gt;preferences-&gt;PyDev-&gt;Interpreter - Python，New一个Python解释器，填上解释器名字和路径，路径选相应的python.exe  </li>
+</ol>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image1.png?raw=true" alt="image"></p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image2.png?raw=true" alt="image"></p>
+<ol start="2">
+<li>General-&gt;Editors-&gt;Text Editors-&gt;Spelling，Encoding改成Other:UTF-8</li>
+<li>General-&gt;Workspace，Text file encoding改成Other:UTF-8 至此，PyDev的配置就完成了。</li>
+</ol>
 
       
     </div>
@@ -323,12 +367,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-        </div>
-      
 
       
       
@@ -338,8 +376,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/05/linux-base/" rel="next" title="linux实用命令">
-                <i class="fa fa-chevron-left"></i> linux实用命令
+              <a href="/2019/03/04/promtheus/" rel="next" title="prometheus监控实践：Kubernetes集群监控">
+                <i class="fa fa-chevron-left"></i> prometheus监控实践：Kubernetes集群监控
               </a>
             
           </div>
@@ -347,10 +385,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/27/linux-port-test/" rel="prev" title="故障排查-linux命令测试端口连通性">
-                故障排查-linux命令测试端口连通性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -402,8 +436,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -454,6 +497,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-安装python"><span class="nav-number">1.1.</span> <span class="nav-text">一. 安装python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-安装eclipse"><span class="nav-number">1.2.</span> <span class="nav-text">二. 安装eclipse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-安装PyDev插件"><span class="nav-number">1.3.</span> <span class="nav-text">三. 安装PyDev插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-配置PyDev插件"><span class="nav-number">1.4.</span> <span class="nav-text">四. 配置PyDev插件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
