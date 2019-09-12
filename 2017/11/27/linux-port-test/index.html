@@ -87,14 +87,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-03-05T06:59:50.373Z">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port01.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port02.png?raw=true">
+<meta property="og:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port03.png?raw=true">
+<meta property="og:updated_time" content="2019-09-12T16:48:18.742Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="故障排查-linux命令测试端口连通性">
 <meta name="twitter:description" content="方法一：telnet法  -预置条件：安装telnetstep 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）step 2、yum -y install telnet-server（安装telnet-server）step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行s">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port01.png?raw=true">
 
 
 
@@ -305,13 +305,13 @@
 
       
         <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
-<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例1.png"></p>
+<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port01.png?raw=true" alt="示例1.png"></p>
 <p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
-<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例2.png"></p>
+<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port02.png?raw=true" alt="示例2.png"></p>
 <p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
 <p>debian 或者 ubuntu : sudo apt-get install wget</p>
 <p>centos : sudo yum -y install wget</p>
-<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例3.png"></p>
+<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port03.png?raw=true" alt="示例3.png"></p>
 
       
     </div>
@@ -422,7 +422,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

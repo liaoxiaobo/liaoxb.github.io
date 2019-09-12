@@ -229,175 +229,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/05/eclipse-pydev/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/05/eclipse-pydev/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-05T15:17:49+08:00">
-                2019-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>title: 搭建python开发环境（ Eclipse+PyDev）<br>date: 2018-06-05 23:02:56<br>tags: linux</p>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><h2 id="一-安装python"><a href="#一-安装python" class="headerlink" title="一. 安装python"></a>一. 安装python</h2><ol>
-<li><a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Install python 2.7.x for Windows</a></li>
-<li>Set environment path (在Path变量中加入C:\Python27;C:\Python27\Scripts;)  </li>
-<li><p>Windows命令行中测试python环境变量是否设置成功</p>
-<pre><code>C:\Users\Administrator&gt;python
-Python 2.7.11 (v2.7.11:6d1b6a68f775, Dec  5 2015, 20:40:30) [MSC v.1500 64 bit (
-AMD64)] on win32
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
-&gt;&gt;&gt;
-</code></pre><h2 id="二-安装eclipse"><a href="#二-安装eclipse" class="headerlink" title="二. 安装eclipse"></a>二. 安装eclipse</h2></li>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">Install JDK</a></li>
-<li>java环境变量配置</li>
-<li><a href="https://www.eclipse.org/downloads//" target="_blank" rel="noopener">Install eclipse *.zip for Windows</a>.</li>
-<li>解压zip包，运行eclipse.exe<h2 id="三-安装PyDev插件"><a href="#三-安装PyDev插件" class="headerlink" title="三. 安装PyDev插件"></a>三. 安装PyDev插件</h2></li>
-</ol>
-<ul>
-<li>方法一：下载python for eclipse  </li>
-</ul>
-<ol>
-<li><p>下载地址:<a href="https://download.csdn.net/download/q52wow/2872235" target="_blank" rel="noopener">https://download.csdn.net/download/q52wow/2872235</a><br>如：org.python.pydev.feature-1.6.3.2010100513.zip</p>
-</li>
-<li><p>解压pydev插件后，会发现有features、plugins两个文件夹，然后把features文件夹下的文件移到D:\dev\eclipse\features目录下，把plugins文件夹下的文件移到D:\dev\eclipse\plugins目录下。 注意：D:\dev\eclipse\为eclipse安装目录</p>
-</li>
-<li><p>重启eclipse，在windows-&gt;preferences出现PyDev配置项，表示PyDev插件安装成功。</p>
-</li>
-</ol>
-<ul>
-<li>方法二：从 Eclipse Marketplace  中下载安装 pydev</li>
-</ul>
-<ol>
-<li>打开  Help -&gt; Eclipse Marketplace</li>
-<li>在搜索框里填入 pydev，就可以找到 pydev，然后点击 Install  按钮即可安装</li>
-</ol>
-<ul>
-<li>方法三：从官网下载安装 pydev</li>
-</ul>
-<ol>
-<li>点击Help-&gt;Install New Software…   在弹出的对话框中，点Add 按钮。  Name中填:Pydev,  Location中填<a href="http://pydev.org/updates" target="_blank" rel="noopener">http://pydev.org/updates</a></li>
-</ol>
-<h2 id="四-配置PyDev插件"><a href="#四-配置PyDev插件" class="headerlink" title="四. 配置PyDev插件"></a>四. 配置PyDev插件</h2><ol>
-<li>windows-&gt;preferences-&gt;PyDev-&gt;Interpreter - Python，New一个Python解释器，填上解释器名字和路径，路径选相应的python.exe  </li>
-</ol>
-<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image1.png?raw=true" alt="image"></p>
-<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/image2.png?raw=true" alt="image"></p>
-<ol start="2">
-<li>General-&gt;Editors-&gt;Text Editors-&gt;Spelling，Encoding改成Other:UTF-8</li>
-<li>General-&gt;Workspace，Text file encoding改成Other:UTF-8 至此，PyDev的配置就完成了。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/04/promtheus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -806,9 +637,8 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
             <p>NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。<br>NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVER和CLIENT才能通过RPC来实现PROGRAM PORT（centos5之前，之后是rpcbind）的对应。可以这么理解RPC和NFS的关系：NFS是一个文件系统，而RPC是负责信息的传输。</p>
 <p>Centos系统环境：<br>服务端IP 192.168.1.28<br>客户端IP 192.168.1.21、192.168.1.155</p>
 <p>一、安装NFS-Server<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep nfs #检查系统是否已安装NFS</span><br><span class="line">yum install nfs-utils -y #客户端和服务端都要安装</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-849d1ae2d6cc802a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NFS启动状态查询.png"></p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/nfs01.png?raw=true" alt="image"></p>
 <p>二、服务端配置启动NFS<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /var/nfsshare </span><br><span class="line">vim /etc/exports #配置共享目录供客户端集群以读写权限访问</span><br><span class="line">systemctl start nfs</span><br><span class="line">showmount -e localhost //查询NFS的共享状态</span><br><span class="line"></span><br><span class="line">[root@test--0004 ~]# showmount -e 192.168.1.28</span><br><span class="line">Export list for 192.168.1.28:</span><br><span class="line">/var/nfsshare2 *</span><br><span class="line">/var/nfsshare *</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-4ff54a2c611efda1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="查询NFS共享.png"></p>
 <p>说明：NFS服务的配置文件为/etc/exports，这个文件是NFS的主要配置文件，不过系统并没有默认值，所以这个文件不一定会存在，可能要使用vim手动建立，然后在文件里面写入配置内容。内容格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他)]</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">1、输出目录：输出目录是指NFS系统中需要共享给客户机使用的目录；</span><br><span class="line">2、客户端：客户端是指网络中可以访问这个NFS输出目录的计算机</span><br><span class="line">          客户端常用的指定方式：</span><br><span class="line">          指定ip地址的主机：192.168.8.106</span><br><span class="line">          指定子网中的所有主机：192.168.0.0/24或 192.168.0.0/255.255.255.0</span><br><span class="line">          指定域名的主机：wj.bsmart.com</span><br><span class="line">          指定域中的所有主机：*.bsmart.com</span><br><span class="line">          所有主机：*</span><br><span class="line"></span><br><span class="line">3、 选项：选项用来设置输出目录的访问权限、用户映射等。</span><br><span class="line"></span><br><span class="line">   NFS主要有3类选项：</span><br><span class="line"></span><br><span class="line">  1）访问权限选项：</span><br><span class="line"></span><br><span class="line">          设置输出目录只读：ro</span><br><span class="line">          设置输出目录读写：rw</span><br><span class="line">          </span><br><span class="line">2）用户映射选项</span><br><span class="line"></span><br><span class="line">    all_squash：将远程访问的所有普通用户及所属组都映射为匿名用户或用户组（nfsnobody）；</span><br><span class="line">    no_all_squash：与all_squash取反（默认设置）；</span><br><span class="line">    root_squash：将root用户及所属组都映射为匿名用户或用户组（默认设置）；</span><br><span class="line">    no_root_squash：与rootsquash取反；</span><br><span class="line">    anonuid=xxx：将远程访问的所有用户都映射为匿名用户，并指定该用户为本地用户（UID=xxx）；</span><br><span class="line">    anongid=xxx：将远程访问的所有用户组都映射为匿名用户组账户，并指定该匿名用户组账户为本地用户组账户（GID=xxx）；</span><br><span class="line"></span><br><span class="line">3）其它选项</span><br><span class="line"></span><br><span class="line">    secure：限制客户端只能从小于1024的tcp/ip端口连接nfs服务器（默认设置）；</span><br><span class="line">    insecure：允许客户端从大于1024的tcp/ip端口连接服务器；</span><br><span class="line">    sync：将数据同步写入内存缓冲区与磁盘中，效率低，但可以保证数据的一致性；</span><br><span class="line">    async：将数据先保存在内存缓冲区中，必要时才写入磁盘；</span><br><span class="line">    wdelay：检查是否有相关的写操作，如果有则将这些写操作一起执行，这样可以提高效率（默认设置）；</span><br><span class="line">    no_wdelay：若有写操作则立即执行，应与sync配合使用；</span><br><span class="line">    subtree：若输出目录是一个子目录，则nfs服务器将检查其父目录的权限(默认设置)；</span><br><span class="line">    no_subtree：即使输出目录是一个子目录，nfs服务器也不检查其父目录的权限，这样可以提高效率；</span><br></pre></td></tr></table></figure>
 <p>三、设置开机启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable rpcbind.service</span><br><span class="line">systemctl enable nfs-service</span><br></pre></td></tr></table></figure></p>
@@ -933,13 +763,13 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
         
           
             <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
-<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://upload-images.jianshu.io/upload_images/7136466-ec7df8c79016da43.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例1.png"></p>
+<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port01.png?raw=true" alt="示例1.png"></p>
 <p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
-<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-f9ca3cc55df53fa7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例2.png"></p>
+<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port02.png?raw=true" alt="示例2.png"></p>
 <p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
 <p>debian 或者 ubuntu : sudo apt-get install wget</p>
 <p>centos : sudo yum -y install wget</p>
-<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://upload-images.jianshu.io/upload_images/7136466-594e501df3233061.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="示例3.png"></p>
+<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port03.png?raw=true" alt="示例3.png"></p>
 
           
         
@@ -1060,9 +890,9 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
         
           
             <p>1、安装net-tools命令行工具 yum install -y net-tools<br>2、执行命令查看被占用端口的pid netstat -anlp | grep port<br>如下图，发现本机8083端口被22980的程序wisecloud-met所占用</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-d755f76da934bfd1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port04.png?raw=true" alt="1.png"></p>
 <p>3、进一步使用命令：ps -aux | grep wisecloud-met，或者直接：ps -aux | grep pid 查看，就可以明确知道8083端口是被哪个程序占用了！然后判断是否使用KILL命令干掉！</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/7136466-2cb015ee3f8a9bc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2.png"></p>
+<p><img src="https://github.com/liaoxiaobo/Markdown-Resource/blob/master/2018.1.1/port05.png?raw=true" alt="2.png"></p>
 <p>知识拓展：<a href="https://www.cnblogs.com/wonux/p/6268134.html" target="_blank" rel="noopener">Linux网络管理常用命令：net-tools VS iproute2</a></p>
 
           
@@ -1342,7 +1172,7 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
