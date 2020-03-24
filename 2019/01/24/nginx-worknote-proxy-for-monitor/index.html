@@ -82,7 +82,7 @@
 <meta name="description" content="需求背景1、测试环境部署了一套监控系统，测试人员经常需要访问web去分析数据或定位问题，但是访问不方便也不灵活,每次需要去找到pod运行主机IP和svc暴露的端口。2、通过利用nginx反向代理+负载均衡配置，快速地访问系统。比如prometheus、granfana等 配置步骤1、查看测试集群监控服务的pod和svc信息，prometheus和grafana均以NodePort的形式映射到主机端">
 <meta name="keywords" content="Nginx">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nginx学习笔记：反向代理配置访问监控和日志系统">
+<meta property="og:title" content="nginx工作笔记：配置反向代理访问监控系统">
 <meta property="og:url" content="http://yoursite.com/2019/01/24/nginx-worknote-proxy-for-monitor/index.html">
 <meta property="og:site_name" content="Liaoxb&#39;s Blog">
 <meta property="og:description" content="需求背景1、测试环境部署了一套监控系统，测试人员经常需要访问web去分析数据或定位问题，但是访问不方便也不灵活,每次需要去找到pod运行主机IP和svc暴露的端口。2、通过利用nginx反向代理+负载均衡配置，快速地访问系统。比如prometheus、granfana等 配置步骤1、查看测试集群监控服务的pod和svc信息，prometheus和grafana均以NodePort的形式映射到主机端">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx15.png?raw=true">
 <meta property="og:image" content="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx16.png?raw=true">
 <meta property="og:image" content="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx17.png?raw=true">
-<meta property="og:updated_time" content="2020-03-24T16:08:56.574Z">
+<meta property="og:updated_time" content="2020-03-24T16:11:41.300Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="nginx学习笔记：反向代理配置访问监控和日志系统">
+<meta name="twitter:title" content="nginx工作笔记：配置反向代理访问监控系统">
 <meta name="twitter:description" content="需求背景1、测试环境部署了一套监控系统，测试人员经常需要访问web去分析数据或定位问题，但是访问不方便也不灵活,每次需要去找到pod运行主机IP和svc暴露的端口。2、通过利用nginx反向代理+负载均衡配置，快速地访问系统。比如prometheus、granfana等 配置步骤1、查看测试集群监控服务的pod和svc信息，prometheus和grafana均以NodePort的形式映射到主机端">
 <meta name="twitter:image" content="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx15.png?raw=true">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>nginx学习笔记：反向代理配置访问监控和日志系统 | Liaoxb's Blog</title>
+  <title>nginx工作笔记：配置反向代理访问监控系统 | Liaoxb's Blog</title>
   
 
 
@@ -264,7 +264,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">nginx学习笔记：反向代理配置访问监控和日志系统</h1>
+          <h1 class="post-title" itemprop="name headline">nginx工作笔记：配置反向代理访问监控系统</h1>
         
 
         <div class="post-meta">
@@ -357,8 +357,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/17/nginx-worknote-setup-static-web/" rel="next" title="Nginx学习笔记：搭建一个归档日志的静态文件服务器">
-                <i class="fa fa-chevron-left"></i> Nginx学习笔记：搭建一个归档日志的静态文件服务器
+              <a href="/2019/01/17/nginx-worknote-setup-static-web/" rel="next" title="Nginx工作笔记：搭建一个归档日志的静态文件服务器">
+                <i class="fa fa-chevron-left"></i> Nginx工作笔记：搭建一个归档日志的静态文件服务器
               </a>
             
           </div>
