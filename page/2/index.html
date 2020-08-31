@@ -239,6 +239,261 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/nfs-server-setup-and-mount/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/26/nfs-server-setup-and-mount/" itemprop="url">nfs服务器搭建和挂载实践</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T23:30:56+08:00">
+                2018-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>NFS 是Network File System的缩写，即网络文件系统。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。<br>NFS在文件传送或信息传送过程中依赖于RPC协议。所以只要用到NFS的地方都要启动RPC服务，不论是NFS SERVER或者NFS CLIENT。这样SERVER和CLIENT才能通过RPC来实现PROGRAM PORT（centos5之前，之后是rpcbind）的对应。可以这么理解RPC和NFS的关系：NFS是一个文件系统，而RPC是负责信息的传输。</p>
+<p>Centos系统环境：<br>服务端IP 192.168.1.28<br>客户端IP 192.168.1.21、192.168.1.155</p>
+<p>一、安装NFS-Server<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep nfs #检查系统是否已安装NFS</span><br><span class="line">yum install nfs-utils -y #客户端和服务端都要安装</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/nfs/nfs01.png?raw=true" alt="image"></p>
+<p>二、服务端配置启动NFS<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mkdir /var/nfsshare </span><br><span class="line">vim /etc/exports #配置共享目录供客户端集群以读写权限访问</span><br><span class="line">systemctl start nfs</span><br><span class="line">showmount -e localhost //查询NFS的共享状态</span><br><span class="line"></span><br><span class="line">[root@test--0004 ~]# showmount -e 192.168.1.28</span><br><span class="line">Export list for 192.168.1.28:</span><br><span class="line">/var/nfsshare2 *</span><br><span class="line">/var/nfsshare *</span><br></pre></td></tr></table></figure></p>
+<p>说明：NFS服务的配置文件为/etc/exports，这个文件是NFS的主要配置文件，不过系统并没有默认值，所以这个文件不一定会存在，可能要使用vim手动建立，然后在文件里面写入配置内容。内容格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;输出目录&gt; [客户端1 选项（访问权限,用户映射,其他）] [客户端2 选项（访问权限,用户映射,其他)]</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">1、输出目录：输出目录是指NFS系统中需要共享给客户机使用的目录；</span><br><span class="line">2、客户端：客户端是指网络中可以访问这个NFS输出目录的计算机</span><br><span class="line">          客户端常用的指定方式：</span><br><span class="line">          指定ip地址的主机：192.168.8.106</span><br><span class="line">          指定子网中的所有主机：192.168.0.0/24或 192.168.0.0/255.255.255.0</span><br><span class="line">          指定域名的主机：wj.bsmart.com</span><br><span class="line">          指定域中的所有主机：*.bsmart.com</span><br><span class="line">          所有主机：*</span><br><span class="line"></span><br><span class="line">3、 选项：选项用来设置输出目录的访问权限、用户映射等。</span><br><span class="line"></span><br><span class="line">   NFS主要有3类选项：</span><br><span class="line"></span><br><span class="line">  1）访问权限选项：</span><br><span class="line"></span><br><span class="line">          设置输出目录只读：ro</span><br><span class="line">          设置输出目录读写：rw</span><br><span class="line">          </span><br><span class="line">2）用户映射选项</span><br><span class="line"></span><br><span class="line">    all_squash：将远程访问的所有普通用户及所属组都映射为匿名用户或用户组（nfsnobody）；</span><br><span class="line">    no_all_squash：与all_squash取反（默认设置）；</span><br><span class="line">    root_squash：将root用户及所属组都映射为匿名用户或用户组（默认设置）；</span><br><span class="line">    no_root_squash：与rootsquash取反；</span><br><span class="line">    anonuid=xxx：将远程访问的所有用户都映射为匿名用户，并指定该用户为本地用户（UID=xxx）；</span><br><span class="line">    anongid=xxx：将远程访问的所有用户组都映射为匿名用户组账户，并指定该匿名用户组账户为本地用户组账户（GID=xxx）；</span><br><span class="line"></span><br><span class="line">3）其它选项</span><br><span class="line"></span><br><span class="line">    secure：限制客户端只能从小于1024的tcp/ip端口连接nfs服务器（默认设置）；</span><br><span class="line">    insecure：允许客户端从大于1024的tcp/ip端口连接服务器；</span><br><span class="line">    sync：将数据同步写入内存缓冲区与磁盘中，效率低，但可以保证数据的一致性；</span><br><span class="line">    async：将数据先保存在内存缓冲区中，必要时才写入磁盘；</span><br><span class="line">    wdelay：检查是否有相关的写操作，如果有则将这些写操作一起执行，这样可以提高效率（默认设置）；</span><br><span class="line">    no_wdelay：若有写操作则立即执行，应与sync配合使用；</span><br><span class="line">    subtree：若输出目录是一个子目录，则nfs服务器将检查其父目录的权限(默认设置)；</span><br><span class="line">    no_subtree：即使输出目录是一个子目录，nfs服务器也不检查其父目录的权限，这样可以提高效率；</span><br></pre></td></tr></table></figure>
+<p>三、设置开机启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable rpcbind.service</span><br><span class="line">systemctl enable nfs-service</span><br></pre></td></tr></table></figure></p>
+<p>四、测试挂载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">客户端执行：</span><br><span class="line">mount -t nfs 192.168.1.28:/var/nfsshare /mnt #客户端挂载NFS服务器中的共享目录</span><br><span class="line">touch /mnt/test.txt #客户端挂载点生成文件，此文件会被共享至NFS服务器:/var/nfsshare</span><br><span class="line">echo &quot;hello word&quot; &gt; /mnt/test.txt</span><br><span class="line">umount /mnt #解除和NFS服务器的挂载</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/27/linux-commands-to-test-port/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/27/linux-commands-to-test-port/" itemprop="url">linux命令测试端口连通性</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-27T23:30:56+08:00">
+                2017-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>方法一：telnet法<br>  -<br>预置条件：安装telnet<br>step 1、rpm -qa telnet-server（无输出表示telnet-server未安装，则执行step2；否则执行step3）<br>step 2、yum -y install telnet-server（安装telnet-server）<br>step 3、rpm -qa telnet（无输出表示telnet未安装，则执行step4，否则执行step5）<br>step 4、yum -y install telnet（安装）</p>
+<p>telnet为用户提供了在本地计算机上完成远程主机工作的能力，因此可以通过telnet来测试端口的连通性，具体用法格式：telnet ip port<br>如果telnet连接不存在的端口，那会显示Connecttion refused<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/port01.png?raw=true" alt="示例1.png"></p>
+<p>方法二：curl法<br>  -<br>预置条件：安装curl<br>curl 的官网下载地址：<a href="http://curl.haxx.se/download/" target="_blank" rel="noopener">http://curl.haxx.se/download/</a><br>下载地址如下：    <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>1.wget  <a href="http://curl.haxx.se/download/curl-7.38.0.tar.gz" target="_blank" rel="noopener">http://curl.haxx.se/download/curl-7.38.0.tar.gz</a><br>如果使用 wget下载https开头的网址域名 时报错，你可能需要加上 –no-check-certificate 选项<br>2.tar -xzvf curl-7.38.0.tar.gz<br>3.cd curl-7.38.0<br>./configure<br>make<br>make install</p>
+<p>curl是利用URL语法在命令行方式下工作的开源文件传输工具。也可以用来测试端口的连通性，具体用法:curl ip:port<br>说明：如果远程主机开通了相应的端口，都会输出信息，如果没有开通相应的端口，则没有任何提示，需要CTRL+C断开。<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/port02.png?raw=true" alt="示例2.png"></p>
+<p>方法三：wget法<br>  -<br>预置条件：安装wget</p>
+<p>debian 或者 ubuntu : sudo apt-get install wget</p>
+<p>centos : sudo yum -y install wget</p>
+<p>wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。wget名称的由来是“World Wide Web”与“get”的结合，它也可以用来测试端口的连通性具体用法:wget ip:port，如果远程主机不存在端口则会一直提示连接主机。<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/port03.png?raw=true" alt="示例3.png"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/26/linux-commands-to-check-used-port/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -434,9 +689,9 @@
       
         
           
-            <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h 打印设备上挂载了多少磁盘，以及磁盘里还有多少可用空间</span><br></pre></td></tr></table></figure>
-<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">根据正则表达式查找相关内容并打印对应的数据</span><br><span class="line"></span><br><span class="line">-A 除了显示符合范本样式的那一行之外，并显示该行之后的内容。</span><br><span class="line">-b 在显示符合范本样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-c 计算符合范本样式的列数。</span><br><span class="line">-C 除了显示符合范本样式的那一列之外，并显示该列之前后的内容。</span><br><span class="line">-i 忽略字符大小写的差别。</span><br><span class="line">-v 反转查找</span><br></pre></td></tr></table></figure>
-<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">根据定位到的数据行处理其中的分段</span><br><span class="line"></span><br><span class="line">[root@dev-7 ~]# kubectl get po -n kube-system | awk &apos;&#123;print $1&#125;&apos;</span><br><span class="line">NAME</span><br><span class="line">coredns-5754845997-bs22m</span><br><span class="line">coredns-5754845997-q78l9</span><br><span class="line">kube-apiserver-dev-7</span><br><span class="line">kube-controller-manager-dev-7</span><br><span class="line">kube-flannel-ds-amd64-f28pv</span><br><span class="line">kube-flannel-ds-amd64-mmpqm</span><br><span class="line">kube-flannel-ds-amd64-th8h8</span><br><span class="line">kube-proxy-km8zv</span><br><span class="line">kube-proxy-qpqnw</span><br><span class="line">kube-proxy-v9vvl</span><br><span class="line">kube-scheduler-dev-7</span><br><span class="line">nvidia-device-plugin-daemonset-75lll</span><br><span class="line">nvidia-device-plugin-daemonset-l6ngb</span><br><span class="line">tiller-748dd66678-549fv</span><br><span class="line"></span><br><span class="line">[root@dev-7 ~]# kubectl get po -n kube-system | awk &apos;&#123;print $1&#125;&apos; |wc -l</span><br><span class="line">15</span><br><span class="line"></span><br><span class="line">[root@dev-7 ~]# kubectl get po -n kube-system | awk &apos;&#123;print $1&#125;&apos; |awk &apos;NR&gt;10&apos;</span><br><span class="line">kube-proxy-v9vvl</span><br><span class="line">kube-scheduler-dev-7</span><br><span class="line">nvidia-device-plugin-daemonset-75lll</span><br><span class="line">nvidia-device-plugin-daemonset-l6ngb</span><br><span class="line">tiller-748dd66678-549fv</span><br></pre></td></tr></table></figure>
+            <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  df -h 打印设备上挂载了多少磁盘，以及磁盘里还有多少可用空间。</span><br><span class="line"></span><br><span class="line">[root@harbor ~]# df -h</span><br><span class="line">文件系统        容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/vda1        50G   23G   24G   50% /</span><br><span class="line">devtmpfs        7.8G     0  7.8G    0% /dev</span><br><span class="line">tmpfs           7.8G     0  7.8G    0% /dev/shm</span><br><span class="line">tmpfs           7.8G  2.9M  7.8G    1% /run</span><br><span class="line">tmpfs           7.8G     0  7.8G    0% /sys/fs/cgroup</span><br><span class="line">/dev/vdc1       197G  157G   31G   84% /var/lib/docker</span><br><span class="line">/dev/vdd1        99G   68G   26G   73% /data</span><br><span class="line"></span><br><span class="line">系统盘分配大小为50G，/dev/vda1分区被挂载到根目录</span><br><span class="line">docker数据盘大小197G，/dev/vdc1分区被挂载到/var/lib/docker，这意味着所有在/var/lib/docker之下的文件和目录在物理意义上存储于/dev/vdc1上</span><br></pre></td></tr></table></figure>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">根据正则表达式查找相关内容并打印对应的数据</span><br><span class="line"></span><br><span class="line">-A 除了显示符合范本样式的那一行之外，并显示该行之后的内容。</span><br><span class="line">-B 在显示符合范本样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-C 除了显示符合范本样式的那一列之外，并显示该列之前后的内容。</span><br><span class="line">-c 计算符合范本样式的列数。</span><br><span class="line">-i 忽略字符大小写的差别。</span><br><span class="line">-v 反转查找</span><br><span class="line"></span><br><span class="line"># 查看日志里面有 error 关键字的日志记录，与这个记录前后三行的日志信息</span><br><span class="line">cat log-fail.txt |grep error -C 3</span><br></pre></td></tr></table></figure>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">localhost% cat test.txt</span><br><span class="line">NAME    STATUS   ROLES                    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION          CONTAINER-RUNTIME</span><br><span class="line">k8s01   Ready    wise-controller          38d   v1.16.4   192.168.0.3    &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s02   Ready    wise-controller          38d   v1.16.4   192.168.0.7    &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s03   Ready    wise-controller          38d   v1.16.4   192.168.0.10   &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s04   NotReady node                     38d   v1.16.4   192.168.0.15   &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line"></span><br><span class="line"># 打印文本的总列数，即字段数量</span><br><span class="line">localhost% awk &apos;END&#123;print NF&#125;&apos; test.txt</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line"># 打印文件的第一列和第五列</span><br><span class="line">localhost% awk &apos;&#123;print $1,$5&#125;&apos; test.txt</span><br><span class="line">NAME VERSION</span><br><span class="line">k8s01 v1.16.4</span><br><span class="line">k8s02 v1.16.4</span><br><span class="line">k8s03 v1.16.4</span><br><span class="line">k8s04 v1.16.4</span><br><span class="line"></span><br><span class="line"># 打印最后一列字段</span><br><span class="line">localhost% awk &apos;&#123;print $NF&#125;&apos; test.txt</span><br><span class="line">CONTAINER-RUNTIME</span><br><span class="line">docker://18.9.8</span><br><span class="line">docker://18.9.8</span><br><span class="line">docker://18.9.8</span><br><span class="line">docker://18.9.8</span><br><span class="line"></span><br><span class="line">打印倒数第二列字段：</span><br><span class="line">localhost% awk &apos;&#123;print $(NF-1)&#125;&apos; test.txt</span><br><span class="line">KERNEL-VERSION</span><br><span class="line">3.10.0-862.el7.x86_64</span><br><span class="line">3.10.0-862.el7.x86_64</span><br><span class="line">3.10.0-862.el7.x86_64</span><br><span class="line">3.10.0-862.el7.x86_64</span><br><span class="line"></span><br><span class="line"># 打印文本文件的总行数</span><br><span class="line">localhost% awk &apos;END&#123;print NR&#125;&apos; test.txt</span><br><span class="line">5</span><br><span class="line"></span><br><span class="line"># 打印文本第1行数据</span><br><span class="line">localhost% awk &apos;NR==1&#123;print&#125;&apos; test.txt</span><br><span class="line">NAME    STATUS   ROLES                    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION          CONTAINER-RUNTIME</span><br><span class="line"></span><br><span class="line"># 打印文本大于第1行的数据</span><br><span class="line">localhost% awk &apos;NR&gt;1&#123;print&#125;&apos; test.txt</span><br><span class="line">k8s01   Ready    wise-controller          38d   v1.16.4   192.168.0.3    &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s02   Ready    wise-controller          38d   v1.16.4   192.168.0.7    &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s03   Ready    wise-controller          38d   v1.16.4   192.168.0.10   &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line">k8s04   NotReady node                     38d   v1.16.4   192.168.0.15   &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line"></span><br><span class="line"># 打印文本最后1行数据</span><br><span class="line">localhost% awk &apos;END&#123;print&#125;&apos; test.txt</span><br><span class="line">k8s04   NotReady node                     38d   v1.16.4   192.168.0.15   &lt;none&gt;        CentOS                  3.10.0-862.el7.x86_64   docker://18.9.8</span><br><span class="line"></span><br><span class="line"># 打印统计两种状态的主机数量</span><br><span class="line">localhost% cat test.txt |awk &apos;NR&gt;1&#123;print $2&#125;&apos; |uniq -c</span><br><span class="line">   3 Ready</span><br><span class="line">   1 NotReady</span><br></pre></td></tr></table></figure>
 <h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">定位到数据行并对数据进行增删改查操作。</span><br><span class="line"></span><br><span class="line">替换文本中的字符串：</span><br><span class="line">sed &apos;s/book/books/&apos; file</span><br><span class="line"># 使用后缀/g标记会替换每一行中的所有匹配：</span><br><span class="line">[root@harbor image_pull_push]# cat img-list.txt |sed &apos;s/registry.cn-hangzhou.aliyuncs.com/192.168.0.11/g&apos;</span><br><span class="line">当需要从第N处匹配开始替换时，可以使用 /Ng：</span><br><span class="line">echo sksksksksksk | sed &apos;s/sk/SK/3g&apos;</span><br><span class="line">skskSKSKSKSK</span><br></pre></td></tr></table></figure>
 <h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">find . -name README.md 查找当前目录下是否存在README.md </span><br><span class="line">find / -name nginx.conf 查找根目录/是否存在nginx.conf</span><br><span class="line">find /home -name &quot;*.txt&quot; 在/home目录下查找以.txt结尾的文件名</span><br><span class="line">find / -size +500M 搜索大于500M的文件</span><br></pre></td></tr></table></figure>
 <h2 id="echo"><a href="#echo" class="headerlink" title="echo"></a>echo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 创建带有内容的文件</span><br><span class="line">[root@harbor ~]# echo hello &gt; new.yaml</span><br><span class="line">[root@harbor ~]# cat new.yaml</span><br><span class="line">hello</span><br><span class="line"># 追加写入文件</span><br><span class="line">[root@harbor ~]# echo hello-test &gt;&gt; new.yaml</span><br><span class="line">[root@harbor ~]# cat new.yaml</span><br><span class="line">hello</span><br><span class="line">hello-test</span><br></pre></td></tr></table></figure>
@@ -450,7 +705,7 @@
 <h2 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">树形结构列出指定目录下的所有文件，包括子目录里的文件</span><br></pre></td></tr></table></figure>
 <h2 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat 显示全部内容，结合grep可以查找内容</span><br></pre></td></tr></table></figure>
 <h2 id="more、less"><a href="#more、less" class="headerlink" title="more、less"></a>more、less</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">more 分页显示文本文件内容</span><br><span class="line">less 支持上下滑动，左右移动显示内容</span><br></pre></td></tr></table></figure>
-<h2 id="head、tail"><a href="#head、tail" class="headerlink" title="head、tail"></a>head、tail</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">显示文件头、尾内容</span><br></pre></td></tr></table></figure>
+<h2 id="head、tail"><a href="#head、tail" class="headerlink" title="head、tail"></a>head、tail</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">head file （显示文件file的前10行）</span><br><span class="line">tail file （显示文件file的最后10行）</span><br><span class="line">tail -n 20 file （显示文件file的最后20行）</span><br><span class="line">tail -f 20 file (实时显示文件最新追加的20行内容)</span><br></pre></td></tr></table></figure>
 <h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">一般模式：</span><br><span class="line">上下翻页：Ctrl+f、Ctrl+b、</span><br><span class="line">跳到当前行最后字符处：Fn+右键</span><br><span class="line">跳到当前行最前面字符处：Fn+左键、0</span><br><span class="line">查找字符images：/image  n继续查找</span><br><span class="line">删除行：dd ndd（n代表删除或复制的行数）</span><br><span class="line">复制行：yy  nyy</span><br><span class="line">粘贴行：p、P</span><br><span class="line">复原前一个操作：u</span><br><span class="line">重做上一个操作：ctrl+r</span><br><span class="line">显示行号：:set nu</span><br><span class="line">字符全局替换：:%s/foo/bar/g  :&#123;作用范围&#125;s/&#123;目标&#125;/&#123;替换&#125;/&#123;替换标志&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">从远程拷贝目录到本地</span><br><span class="line">scp -r root@10.10.10.10:/opt/soft/mongodb /opt/soft/ </span><br><span class="line">上传本地目录到远程机器指定目录</span><br><span class="line">scp -r /opt/soft/mongodb root@10.10.10.10:/opt/soft/scptest</span><br></pre></td></tr></table></figure>
 <h2 id="chmod、chown"><a href="#chmod、chown" class="headerlink" title="chmod、chown"></a>chmod、chown</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 修改一个文件的权限</span><br><span class="line">chown 修改一个文件所归属的用户或组</span><br></pre></td></tr></table></figure>
@@ -557,7 +812,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -570,7 +825,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

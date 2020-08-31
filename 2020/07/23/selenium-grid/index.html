@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="自动化测试,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、镜像分类  hub 是集中管理节点，集中对外提供服务。node 是分布式的浏览器节点，受 hub 节点的控制。  123456使用的镜像：selenium/hub:Selenium Grid Hub 节点selenium/node-chrome:安装有 Chrome 的 Selenium Node 节点镜像selenium/node-firefox:安装有 Firefox 的 Selenium">
+<meta name="keywords" content="自动化测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="selenium-grid实践">
+<meta property="og:url" content="http://yoursite.com/2020/07/23/selenium-grid/index.html">
+<meta property="og:site_name" content="Liaoxb&#39;s Blog">
+<meta property="og:description" content="1、镜像分类  hub 是集中管理节点，集中对外提供服务。node 是分布式的浏览器节点，受 hub 节点的控制。  123456使用的镜像：selenium/hub:Selenium Grid Hub 节点selenium/node-chrome:安装有 Chrome 的 Selenium Node 节点镜像selenium/node-firefox:安装有 Firefox 的 Selenium">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-31T11:02:35.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="selenium-grid实践">
+<meta name="twitter:description" content="1、镜像分类  hub 是集中管理节点，集中对外提供服务。node 是分布式的浏览器节点，受 hub 节点的控制。  123456使用的镜像：selenium/hub:Selenium Grid Hub 节点selenium/node-chrome:安装有 Chrome 的 Selenium Node 节点镜像selenium/node-firefox:安装有 Firefox 的 Selenium">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/07/23/selenium-grid/">
+
+
+
+
+
+  <title>selenium-grid实践 | Liaoxb's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liaoxb's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/23/selenium-grid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">selenium-grid实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-23T21:02:56+08:00">
+                2020-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>1、镜像分类</p>
+<blockquote>
+<p>hub 是集中管理节点，集中对外提供服务。node 是分布式的浏览器节点，受 hub 节点的控制。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">使用的镜像：</span><br><span class="line">selenium/hub:Selenium Grid Hub 节点</span><br><span class="line">selenium/node-chrome:安装有 Chrome 的 Selenium Node 节点镜像</span><br><span class="line">selenium/node-firefox:安装有 Firefox 的 Selenium Node 节点镜像</span><br><span class="line">selenium/node-chrome-debug: 安装有 Chrome 的 Selenium Node 节点镜像，包含远程桌面</span><br><span class="line">selenium/node-firefox-debug: 安装有 Firefox 的 Selenium Node 节点镜像，包含远程桌面</span><br></pre></td></tr></table></figure>
+<p>2、使用场景</p>
+<blockquote>
+<p>解决重复执行测试,解决多浏览器兼容测试</p>
+</blockquote>
+<blockquote>
+<p>分布式执行，减少测试运行时间</p>
+</blockquote>
+<p>3、安装部署</p>
+<blockquote>
+<p>docker方式安装</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker run -d -p 4444:4444 --name selenium-hub selenium/hub</span><br><span class="line"></span><br><span class="line">docker run -d --name node-chrome --link selenium-hub:hub selenium/node-chrome</span><br><span class="line"></span><br><span class="line">docker run -d --name node-firefox --link selenium-hub:hub selenium/node-firefox</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>docker-compose方式安装</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3&quot;</span><br><span class="line">services:</span><br><span class="line">  selenium-hub:</span><br><span class="line">    image: selenium/hub</span><br><span class="line">    container_name: selenium-hub</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4444:4444&quot;</span><br><span class="line"></span><br><span class="line">  chrome:</span><br><span class="line">    image: selenium/node-chrome</span><br><span class="line">    volumes:</span><br><span class="line">      - /dev/shm:/dev/shm</span><br><span class="line">    depends_on:</span><br><span class="line">      - selenium-hub</span><br><span class="line">    environment:</span><br><span class="line">      - HUB_HOST=selenium-hub</span><br><span class="line">    #ports:</span><br><span class="line">    #  - &quot;5900:5900&quot; # for VNC viewer</span><br><span class="line"></span><br><span class="line">  firefox:</span><br><span class="line">    image: selenium/node-firefox</span><br><span class="line">    volumes:</span><br><span class="line">      - /dev/shm:/dev/shm</span><br><span class="line">    depends_on:</span><br><span class="line">      - selenium-hub</span><br><span class="line">    environment:</span><br><span class="line">      - HUB_HOST=selenium-hub</span><br><span class="line"></span><br><span class="line"># 检查运行状态</span><br><span class="line">localhost% docker ps</span><br><span class="line">CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                     NAMES</span><br><span class="line">6d4640a22a4f        selenium/node-firefox   &quot;/opt/bin/entry_poin…&quot;   15 minutes ago      Up 15 minutes                                 node-firefox</span><br><span class="line">ff2fe54541ea        selenium/node-chrome    &quot;/opt/bin/entry_poin…&quot;   16 minutes ago      Up 16 minutes                                 node-chrome</span><br><span class="line">18d02a1b37bd        selenium/hub            &quot;/opt/bin/entry_poin…&quot;   19 minutes ago      Up 19 minutes       0.0.0.0:4444-&gt;4444/tcp   selenium-hub</span><br></pre></td></tr></table></figure>
+<p>4、运行测试脚本</p>
+<blockquote>
+<p>当部署带debug的浏览器镜像，通过主机ports暴露和vnc命令就可以打开浏览器进行调试<br>open vnc://:<a href="mailto:secret@192.168.1.100" target="_blank" rel="noopener">secret@192.168.1.100</a>:5900</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 脚本里通过browserName指定测试浏览器</span><br><span class="line"></span><br><span class="line">localhost% cat grid_demo.py</span><br><span class="line">from selenium import webdriver</span><br><span class="line">from time import sleep</span><br><span class="line"></span><br><span class="line">driver = webdriver.Remote(</span><br><span class="line">command_executor=&apos;http://127.0.0.1:4444/wd/hub&apos;,</span><br><span class="line">desired_capabilities=&#123;&apos;browserName&apos;: &apos;chrome&apos;&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">driver.get(&apos;https://www.baidu.com&apos;)</span><br><span class="line">print(&quot;get baidu&quot;)</span><br><span class="line"></span><br><span class="line">driver.find_element_by_id(&quot;kw&quot;).send_keys(&quot;hello selenium&quot;)</span><br><span class="line">driver.find_element_by_id(&quot;su&quot;).click()</span><br><span class="line"></span><br><span class="line">sleep(1)</span><br><span class="line"></span><br><span class="line">driver.get_screenshot_as_file(&quot;./baidu_img.png&quot;)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br><span class="line">print(&quot;end...&quot;)</span><br><span class="line"></span><br><span class="line">localhost% python grid_demo.py</span><br><span class="line">get baidu</span><br><span class="line">end...</span><br></pre></td></tr></table></figure>
+<p>5、查看hub容器运行日志<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">localhost% docker logs -f 18d02a1b37bd</span><br><span class="line">2020-07-22 10:14:33,369 INFO Included extra file &quot;/etc/supervisor/conf.d/selenium-hub.conf&quot; during parsing</span><br><span class="line">2020-07-22 10:14:33,371 INFO supervisord started with pid 8</span><br><span class="line">2020-07-22 10:14:34,379 INFO spawned: &apos;selenium-hub&apos; with pid 11</span><br><span class="line">Starting Selenium Hub with configuration:</span><br><span class="line">2020-07-22 10:14:34,394 INFO success: selenium-hub entered RUNNING state, process has stayed up for &gt; than 0 seconds (startsecs)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;host&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">  &quot;port&quot;: 4444,</span><br><span class="line">  &quot;role&quot;: &quot;hub&quot;,</span><br><span class="line">  &quot;maxSession&quot;: 5,</span><br><span class="line">  &quot;newSessionWaitTimeout&quot;: -1,</span><br><span class="line">  &quot;capabilityMatcher&quot;: &quot;org.openqa.grid.internal.utils.DefaultCapabilityMatcher&quot;,</span><br><span class="line">  &quot;throwOnCapabilityNotPresent&quot;: true,</span><br><span class="line">  &quot;jettyMaxThreads&quot;: -1,</span><br><span class="line">  &quot;cleanUpCycle&quot;: 5000,</span><br><span class="line">  &quot;browserTimeout&quot;: 0,</span><br><span class="line">  &quot;timeout&quot;: 1800,</span><br><span class="line">  &quot;debug&quot;: false</span><br><span class="line">&#125;</span><br><span class="line">10:14:34.882 INFO [GridLauncherV3.parse] - Selenium server version: 3.141.59, revision: e82be7d358</span><br><span class="line">10:14:35.082 INFO [GridLauncherV3.lambda$buildLaunchers$5] - Launching Selenium Grid hub on port 4444</span><br><span class="line">2020-07-22 10:14:35.587:INFO::main: Logging initialized @1187ms to org.seleniumhq.jetty9.util.log.StdErrLog</span><br><span class="line">10:14:35.905 INFO [Hub.start] - Selenium Grid hub is up and running</span><br><span class="line">10:14:35.907 INFO [Hub.start] - Nodes should register to http://172.17.0.2:4444/grid/register/</span><br><span class="line">10:14:35.907 INFO [Hub.start] - Clients should connect to http://172.17.0.2:4444/wd/hub</span><br><span class="line">10:15:53.376 INFO [DefaultGridRegistry.add] - Registered a node http://172.17.0.3:5555</span><br><span class="line">10:17:20.131 INFO [DefaultRemoteProxy.onEvent] - Marking the node http://172.17.0.3:5555 as down: cannot reach the node for 2 tries</span><br><span class="line">10:17:23.039 INFO [DefaultGridRegistry.add] - Registered a node http://172.17.0.3:5555</span><br><span class="line">10:17:23.046 WARN [DefaultGridRegistry.removeIfPresent] - Cleaning up stale test sessions on the unregistered node http://172.17.0.3:5555</span><br><span class="line">10:18:28.156 INFO [DefaultGridRegistry.add] - Registered a node http://172.17.0.4:5555</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">10:35:10.016 INFO [RequestHandler.process] - Got a request to create a new session: Capabilities &#123;browserName: firefox&#125;</span><br><span class="line">10:35:10.024 INFO [TestSlot.getNewSession] - Trying to create a new session on test slot &#123;server:CONFIG_UUID=77d8f1a3-4df1-417a-b274-e8e30d1e4de1, seleniumProtocol=WebDriver, browserName=firefox, maxInstances=1, moz:firefoxOptions=&#123;log=&#123;level=info&#125;&#125;, platformName=LINUX, version=68.0.1, applicationName=, platform=LINUX&#125;</span><br><span class="line"></span><br><span class="line">10:36:01.160 INFO [RequestHandler.process] - Got a request to create a new session: Capabilities &#123;browserName: chrome&#125;</span><br><span class="line">10:36:01.165 INFO [TestSlot.getNewSession] - Trying to create a new session on test slot &#123;server:CONFIG_UUID=5f3ba141-2be6-438a-91a3-fc5b4f60224a, seleniumProtocol=WebDriver, browserName=chrome, maxInstances=1, platformName=LINUX, version=76.0.3809.87, applicationName=, platform=LINUX&#125;</span><br></pre></td></tr></table></figure></p>
+<p>6、node浏览器参数解析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">browserTimeout: 0</span><br><span class="line"></span><br><span class="line">debug: false</span><br><span class="line"></span><br><span class="line">jettyMaxThreads: -1</span><br><span class="line"></span><br><span class="line">host: 172.17.0.3</span><br><span class="line"></span><br><span class="line">port: 5555</span><br><span class="line"></span><br><span class="line">role: node      # 表示启动的是node节点</span><br><span class="line"></span><br><span class="line">timeout: 1800</span><br><span class="line"></span><br><span class="line">cleanUpCycle: 5000</span><br><span class="line"></span><br><span class="line">maxSession: 1       # node节点最大会话请求</span><br><span class="line"></span><br><span class="line">capabilities: Capabilities &#123;applicationName: , browserName: chrome, maxInstances: 1, platform: LINUX, platformName: LINUX, seleniumProtocol: WebDriver, server:CONFIG_UUID: 5f3ba141-2be6-438a-91a3-fc5..., version: 76.0.3809.87&#125;</span><br><span class="line"></span><br><span class="line">downPollingLimit: 2</span><br><span class="line"></span><br><span class="line">hub: http://172.17.0.2:4444/grid/register   # 表示hub机地址</span><br><span class="line"></span><br><span class="line">id: http://172.17.0.3:5555</span><br><span class="line"></span><br><span class="line">nodePolling: 5000</span><br><span class="line"></span><br><span class="line">nodeStatusCheckTimeout: 5000</span><br><span class="line"></span><br><span class="line">proxy: org.openqa.grid.selenium.proxy.DefaultRemoteProxy</span><br><span class="line"></span><br><span class="line">register: true</span><br><span class="line"></span><br><span class="line">registerCycle: 5000</span><br><span class="line"></span><br><span class="line">remoteHost: http://172.17.0.3:5555</span><br><span class="line"></span><br><span class="line">unregisterIfStillDownAfter: 60000</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/自动化测试/" rel="tag"># 自动化测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/30/git-worknote/" rel="next" title="git工作笔记">
+                <i class="fa fa-chevron-left"></i> git工作笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">liaoxb</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liaoxb</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
