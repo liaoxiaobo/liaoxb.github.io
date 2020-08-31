@@ -239,6 +239,279 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/10/nginx-worknote-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/10/nginx-worknote-introduction/" itemprop="url">Nginx工作笔记：入门基础</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-10T20:00:56+08:00">
+                2019-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Nginx常用功能"><a href="#Nginx常用功能" class="headerlink" title="Nginx常用功能"></a>Nginx常用功能</h1><h2 id="http正向代理"><a href="#http正向代理" class="headerlink" title="http正向代理"></a>http正向代理</h2><p>正向代理是一个位于客户端和原始服务器(origin server)之间的服务器，为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，然后代理向原始服务器转交请求并将获得的内容返回给客户端。<br>当然前提是客户端要知道正向代理服务器的 IP 地址，还有代理程序的端口。</p>
+<p>正向代理的用途：<br>（1）访问原来无法访问的资源，如google<br>（2） 可以做缓存，加速访问资源<br>（3）对客户端访问授权，上网进行认证<br>（4）代理可以记录用户访问记录（上网行为管理），对外隐藏用户信息</p>
+<p><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx1.png?raw=true" alt="1.png"></p>
+<h2 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h2><p>反向代理（Reverse Proxy）实际运行方式是指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器。<br>反向代理的作用：<br>（1）保证内网的安全，可以使用反向代理提供WAF功能，阻止web攻击<br>（2）负载均衡，通过反向代理服务器来优化网站的负载<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx2.png?raw=true" alt="2.png"><br>两者区别，看图说话：<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx3.png?raw=true" alt="3.png"></p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><h3 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h3><p>这里提到的客户端发送的、Nginx 反向代理服务器接收到的请求数量，就是我们说的负载量。<br>请求数量按照一定的规则进行分发，到不同的服务器处理的规则，就是一种均衡规则。<br>所以将服务器接收到的请求按照规则分发的过程，称为负载均衡。</p>
+<h3 id="nginx负载均衡算法"><a href="#nginx负载均衡算法" class="headerlink" title="nginx负载均衡算法"></a>nginx负载均衡算法</h3><p>Nginx提供的负载均衡策略有2种：内置策略和扩展策略。内置策略为轮询，加权轮询，Ip hash。<br>扩展策略，就天马行空，只有你想不到的没有他做不到的啦，你可以参照所有的负载均衡算法，给他一一找出来做下实现。<br>上2个图，理解这三种负载均衡算法的实现<br><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx4.png?raw=true" alt="4.png"></p>
+<p><img src="https://github.com/liaoxiaobo/liaoxiaobo.github.io/blob/master/img/linux/nginx5.png?raw=true" alt="5.png"><br>Ip hash算法，对客户端请求的ip进行hash操作，然后根据hash结果将同一个客户端ip的请求分发给同一台服务器进行处理，可以解决session不共享的问题。</p>
+<h1 id="Nginx配置文件详解"><a href="#Nginx配置文件详解" class="headerlink" title="Nginx配置文件详解"></a>Nginx配置文件详解</h1><p>Nginx配置文件主要分成四部分：main（全局设置）、server（主机设置）、upstream（上游服务器设置，主要为反向代理、负载均衡相关配置）和location（URL匹配特定位置后的设置），每部分包含若干个指令。</p>
+<p>他们之间的关系式：server继承main，location继承server；upstream既不会继承指令也不会被继承。它有自己的特殊指令，不需要在其他地方的应用</p>
+<p>main部分设置的指令将影响其它所有部分的设置；server部分的指令主要用于指定虚拟主机域名、IP和端口；upstream的指令用于设置一系列的后端服务器，设置反向代理及后端服务器的负载均衡；location部分用于匹配网页位置（比如，根目录”/“,”/images”,等等）。</p>
+<blockquote>
+<p>docker run –name nginx-test -p 8080:80 -d nginx<br>使用docker命令直接安装启动nginx</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 进入容器内查看默认的配置文件,均在/etc/nginx/路径下。</span><br><span class="line">localhost:~ liaoxb$ docker exec -ti 2ccbf7fa358e sh</span><br><span class="line"># find / -name nginx.conf</span><br><span class="line">/etc/nginx/nginx.conf</span><br><span class="line"># find / -name default.conf</span><br><span class="line">/etc/nginx/conf.d/default.conf</span><br></pre></td></tr></table></figure>
+<p>默认的 nginx 配置文件 nginx.conf 内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">root@2ccbf7fa358e:/# cat /etc/nginx/nginx.conf</span><br><span class="line">user  nginx;    #定义Nginx运行的用户和用户组</span><br><span class="line"></span><br><span class="line">worker_processes  1;    #nginx进程数，建议设置为等于CPU总核心数</span><br><span class="line"></span><br><span class="line">error_log  /var/log/nginx/error.log warn;   #全局错误日志定义类型，[ debug | info | notice | warn | error | crit ]</span><br><span class="line"></span><br><span class="line">pid        /var/run/nginx.pid;  #进程pid文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;       #单个进程最大连接数（最大连接数=连接数*进程数）</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#设定http服务器，利用它的反向代理功能提供负载均衡支持</span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;        #文件扩展名与文件类型映射表</span><br><span class="line">    default_type  application/octet-stream;     #默认文件类型</span><br><span class="line"></span><br><span class="line">    log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">                      &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">                      &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</span><br><span class="line"></span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line">    </span><br><span class="line">#开启高效文件传输模式，sendfile指令指定nginx是否调用sendfile函数来输出文件，对于普通应用设为 on，如果用来进行下载等应用磁盘IO重负载应用，可设置为off，以平衡磁盘与网络I/O处理速度，降低系统的负载。注意：如果图片显示不正常把这个改成off。</span><br><span class="line">    sendfile        on;</span><br><span class="line">#此选项允许或禁止使用socke的TCP_CORK的选项，此选项仅在使用sendfile的时候使用</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;      #长连接超时时间，单位是秒</span><br><span class="line"></span><br><span class="line">    #gzip  on;      #gzip模块设置</span><br><span class="line"></span><br><span class="line">    include /etc/nginx/conf.d/*.conf;   #增加nginx虚拟主机配置文件(conf.d)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>默认的nginx虚拟主机配置文件如下（反向代理到nginx的默认html页面，位于/usr/share/nginx/html/index.html）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">root@2ccbf7fa358e:/# cat /etc/nginx/conf.d/default.conf</span><br><span class="line">#虚拟主机的配置</span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;    #监听端口</span><br><span class="line">    server_name  localhost;     #域名可以有多个，用空格隔开</span><br><span class="line"></span><br><span class="line">    #charset koi8-r;</span><br><span class="line">    #access_log  /var/log/nginx/host.access.log  main;</span><br><span class="line">#对 &quot;/&quot; 启用反向代理</span><br><span class="line">    location / &#123;</span><br><span class="line">        root   /usr/share/nginx/html;   #根目录</span><br><span class="line">        index  index.html index.htm;    #设置默认页</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">    # redirect server error pages to the static page /50x.html</span><br><span class="line">    #</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # proxy the PHP scripts to Apache listening on 127.0.0.1:80</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    proxy_pass   http://127.0.0.1;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    root           html;</span><br><span class="line">    #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    #    fastcgi_index  index.php;</span><br><span class="line">    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">    #    include        fastcgi_params;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # deny access to .htaccess files, if Apache&apos;s document root</span><br><span class="line">    # concurs with nginx&apos;s one</span><br><span class="line">    #</span><br><span class="line">    #location ~ /\.ht &#123;</span><br><span class="line">    #    deny  all;     #拒绝的ip</span><br><span class="line">    #&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>参考文档：<br><a href="https://www.runoob.com/w3cnote/nginx-setup-intro.html" target="_blank" rel="noopener">https://www.runoob.com/w3cnote/nginx-setup-intro.html</a><br><a href="https://www.runoob.com/w3cnote/nginx-setup-intro.html" target="_blank" rel="noopener">https://www.runoob.com/w3cnote/nginx-setup-intro.html</a><br><a href="https://www.w3cschool.cn/nginx/nginx-d1aw28wa.html" target="_blank" rel="noopener">https://www.w3cschool.cn/nginx/nginx-d1aw28wa.html</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/20/analysis-of-the-performance-test-key-metrics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/20/analysis-of-the-performance-test-key-metrics/" itemprop="url">解读性能测试的几个重要指标</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-20T00:00:55+08:00">
+                2018-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="性能测试常用衡量指标"><a href="#性能测试常用衡量指标" class="headerlink" title="性能测试常用衡量指标"></a>性能测试常用衡量指标</h1><h2 id="并发用户数"><a href="#并发用户数" class="headerlink" title="并发用户数"></a>并发用户数</h2><ul>
+<li><strong>业务层面的并发用户数</strong>，指的是实际使用系统的用户总数。但是单靠这个指标并不能反映系统实际承载的压力，我们还要结合用户行为模型才能得到系统实际承载的压力。</li>
+<li><strong>后端服务器层面的并发用户数</strong>，指的是“同时向服务器发送请求的数量”，直接反映了系统实际承载的压力。</li>
+</ul>
+<p><em>场景举例：<br>一个已经投入运行的 ERP 系统，该系统所在企业共有 5000 名员工并都拥有账号，也就是说这个系统有 5000 个潜在用户。根据系统日志分析得知，该系统最大在线用户数是 2500 人。</em></p>
+<p><strong>业务层面的并发用户数</strong>=2500人 （此数值仅仅表明在最高峰时段有 2500 个用户登录了系统，而服务器所承受的实际压力取决于登录用户行为，所以它不能准确反映服务器此时此刻实际承载的压力）</p>
+<p><em>用户行为分析建模：<br>假设在某一时间点上，这 2500 个用户中，30% 用户处于页面浏览状态（对服务器没有发起请求），20% 用户在填写订单（也没有对服务器发起请求），5% 用户在递交订单，15% 用户在查询订单，而另外的 30% 用户没有进行任何操作。</em></p>
+<p><strong>后端服务器层面的并发用户数</strong>=500人（这 2500 个“并发用户”中真正对服务器产生压力的只有 500 个用户（（5%+15%）*2500=500））。</p>
+<p>从这个例子可以看出，后端服务器层面的并发用户数，同时取决于业务层面并发用户数和用户行为模式，而且用户行为模式占的比重较大。因此，分析得到准确的用户行为模式，是性能测试中的关键一环。获得精准的用户行为模式，是除了获取性能需求外，最困难的工作。</p>
+<h2 id="响应时间-RT"><a href="#响应时间-RT" class="headerlink" title="响应时间 RT"></a>响应时间 RT</h2><p>RT：处理一次请求所需要的平均处理时间<br>响应时间是终端用户对系统性能的最直观印象，包括系统响应时间和前端展现时间</p>
+<ul>
+<li>系统响应时间又可以进一步细分为后台系统处理时间、数据库处理时间和网络传输时间等；</li>
+<li>前端展现时间，取决于客户端收到服务器返回的数据后渲染页面所消耗的时间</li>
+</ul>
+<h2 id="系统吞吐率-TPS"><a href="#系统吞吐率-TPS" class="headerlink" title="系统吞吐率 TPS"></a>系统吞吐率 TPS</h2><p>TPS：每秒钟处理完的事务次数，即吞吐率；一般TPS是对整个系统来讲的。一个应用系统1s能完成多少事务处理，一个事务在分布式处理中，可能会对应多个请求，对于衡量单个接口服务的处理能力，用QPS比较多</p>
+<h2 id="QPS"><a href="#QPS" class="headerlink" title="QPS"></a>QPS</h2><p>QPS: 服务器一秒钟处理完请求的数量；注意这里是处理完。具体是指发出请求到服务器处理完成功返回结果。可以理解在server中有个counter，每处理一个请求加1，1秒后 counter=QPS<br>计算公式：QPS = 并发用户数 / 平均响应时间</p>
+<p><em>举个列子：<br>如果一次性可以处理100个请求并发量，每个请求耗时100毫秒，则qps = 1000<br>如果一次性可以处理50个请求并发量，每个请求耗时200毫秒，则qps = 250<br>所以QPS与单个请求处理时间以及服务器一次性可以处理多少请求是成比例关系的</em></p>
+<p>部分内容参考极客时间: <a href="https://time.geekbang.org/column/article/14577#previewimg" target="_blank" rel="noopener">https://time.geekbang.org/column/article/14577#previewimg</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/nfs-server-setup-and-mount/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -812,7 +1085,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -825,7 +1098,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

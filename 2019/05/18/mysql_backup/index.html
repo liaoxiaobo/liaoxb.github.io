@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据库,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+<meta name="keywords" content="数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql备份练习">
+<meta property="og:url" content="http://yoursite.com/2019/05/18/mysql_backup/index.html">
+<meta property="og:site_name" content="Liaoxb&#39;s Blog">
+<meta property="og:description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-31T11:15:09.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql备份练习">
+<meta name="twitter:description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/18/mysql_backup/">
+
+
+
+
+
+  <title>Mysql备份练习 | Liaoxb's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liaoxb's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/mysql_backup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liaoxb">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liaoxb's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mysql备份练习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-18T18:02:56+08:00">
+                2019-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>SQL 表复制</li>
+</ul>
+<p>使用场景：快速复制备份一张表的完整结构以及数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 在mysql表复制时，其实可以直接用命令&apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错</span><br><span class="line">#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_consistency.html)：</span><br><span class="line"></span><br><span class="line">mysql&gt; create table user_backup as select * from user;</span><br><span class="line">ERROR 1786 (HY000): Statement violates GTID consistency: CREATE TABLE ... SELECT.</span><br></pre></td></tr></table></figure>
+<p>方法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#第一步：只复制表结构，命名新表为user_backup</span><br><span class="line">mysql&gt; create table user_backup like user;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line">#第二步，只复制表数据，且两张表结构一模一样</span><br><span class="line">mysql&gt; insert into user_backup select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user_backup;</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">| id | created_at          | disable | email            | is_admin | ldap_source | name      | nickname  | updated_at          |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">|  1 | 2019-03-03 23:33:21 |         | admin@wise2c.com |         |        NULL | admin     | admin     | 2019-03-10 18:20:40 |</span><br><span class="line">|  4 | 2019-03-05 13:31:04 |        | bfpiaoran@qq.com |          |        NULL | bfpiaoran | bfpiaoran | 2019-03-05 13:31:04 |</span><br><span class="line">| 41 | 2019-03-12 23:55:03 |         | liaoxb@qq.com    |          |        NULL | liaoxb    | liaoxb    | 2019-03-12 23:55:03 |</span><br><span class="line">| 42 | 2019-03-13 15:47:48 |         | restful@qq.com   |          |        NULL | restful   | restful   | 2019-03-13 15:47:48 |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>方法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"># 第一步：获取数据表的完整结构</span><br><span class="line">mysql&gt; show create table user \G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: user</span><br><span class="line">Create Table: CREATE TABLE `user` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `created_at` datetime DEFAULT NULL,</span><br><span class="line">  `disable` bit(1) NOT NULL,</span><br><span class="line">  `email` varchar(255) DEFAULT NULL,</span><br><span class="line">  `is_admin` bit(1) NOT NULL,</span><br><span class="line">  `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">  `name` varchar(255) NOT NULL,</span><br><span class="line">  `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">  `updated_at` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">ERROR:</span><br><span class="line">No query specified</span><br><span class="line"></span><br><span class="line">#第二步，修改SQL语句的数据表名，并执行SQL语句</span><br><span class="line">mysql&gt; CREATE TABLE `user_backup1` (</span><br><span class="line">    -&gt;   `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">    -&gt;   `created_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   `disable` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `email` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `is_admin` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">    -&gt;   `name` varchar(255) NOT NULL,</span><br><span class="line">    -&gt;   `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `updated_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   PRIMARY KEY (`id`),</span><br><span class="line">    -&gt;   UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">    -&gt; ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line">#第三步：INSERT INTO... SELECT 语句来实现拷贝数据</span><br><span class="line">mysql&gt; insert into user_backup1 select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br><span class="line">#第四步： 验证查看新表数据</span><br><span class="line">mysql&gt; select * from user_backup1;</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">| id | created_at          | disable | email            | is_admin | ldap_source | name      | nickname  | updated_at          |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">|  1 | 2019-03-03 23:33:21 |         | admin@wise2c.com |         |        NULL | admin     | admin     | 2019-03-10 18:20:40 |</span><br><span class="line">|  4 | 2019-03-05 13:31:04 |        | bfpiaoran@qq.com |          |        NULL | bfpiaoran | bfpiaoran | 2019-03-05 13:31:04 |</span><br><span class="line">| 41 | 2019-03-12 23:55:03 |         | liaoxb@qq.com    |          |        NULL | liaoxb    | liaoxb    | 2019-03-12 23:55:03 |</span><br><span class="line">| 42 | 2019-03-13 15:47:48 |         | restful@qq.com   |          |        NULL | restful   | restful   | 2019-03-13 15:47:48 |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>导出表</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p bldr user &gt; user_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don&apos;t want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">提示：当前数据库实例中开启了 GTID 功能, 在开启有 GTID 功能的数据库实例中, 导出其中任何一个库, 如果没有显示地指定--set-gtid-purged参数, 都会提示这一行信息. 意思是默认情况下, 导出的库中含有 GTID 信息, 如果不想导出包含有 GTID 信息的数据库,需要显示地添加--set-gtid-purged=OFF参数.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 加上--set-gtid-purged=OFF参数</span><br><span class="line">root@Master:/# mysqldump -uwise2c -p --set-gtid-purged=OFF bldr user &gt; user_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">root@Master:/# ls user*</span><br><span class="line">user_bak.sql</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导出整个数据库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p --set-gtid-purged=OFF --all-databases &gt; databases_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">root@Master:/# ls data*</span><br><span class="line">databases_bak.sql</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入表</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mysql命令导入</span><br><span class="line">root@Master:/# mysql -uwise2c -p bldr &lt; user_bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># source命令导入</span><br><span class="line">root@Master:/# mysql -uwise2c -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line"></span><br><span class="line">mysql&gt; use bldr;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; source user_bak.sql</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入整个数据库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysql -uwise2c -p  &lt; databases_bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/29/jenkins-ci-apitest/" rel="next" title="使用Jenkins实现持续集成API自动化测试">
+                <i class="fa fa-chevron-left"></i> 使用Jenkins实现持续集成API自动化测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/01/kubernetes-v1.16.4-deploy-by-kubeadm/" rel="prev" title="使用kubeadm部署K8S集群v1.16.4">
+                使用kubeadm部署K8S集群v1.16.4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">liaoxb</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liaoxb</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
