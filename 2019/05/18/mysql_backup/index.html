@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+<meta name="description" content="快速复制表的完整结构和数据在mysql表复制时，其实可以直接用命令’CREATE TABLE 新表 AS SELECT * FROM 旧表’，但是MySQL5.7.x版本里面gtid是开启的，会报以下错误错误12mysql&amp;gt; create table user_backup as select * from user;ERROR 1786 (HY000): Statement violate">
 <meta name="keywords" content="数据库">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql备份练习">
+<meta property="og:title" content="Mysql数据备份">
 <meta property="og:url" content="http://yoursite.com/2019/05/18/mysql_backup/index.html">
 <meta property="og:site_name" content="Liaoxb&#39;s Blog">
-<meta property="og:description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+<meta property="og:description" content="快速复制表的完整结构和数据在mysql表复制时，其实可以直接用命令’CREATE TABLE 新表 AS SELECT * FROM 旧表’，但是MySQL5.7.x版本里面gtid是开启的，会报以下错误错误12mysql&amp;gt; create table user_backup as select * from user;ERROR 1786 (HY000): Statement violate">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-31T11:15:09.091Z">
+<meta property="og:updated_time" content="2020-09-01T15:02:07.451Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql备份练习">
-<meta name="twitter:description" content="SQL 表复制  使用场景：快速复制备份一张表的完整结构以及数据 12345# 在mysql表复制时，其实可以直接用命令&amp;apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&amp;apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_con">
+<meta name="twitter:title" content="Mysql数据备份">
+<meta name="twitter:description" content="快速复制表的完整结构和数据在mysql表复制时，其实可以直接用命令’CREATE TABLE 新表 AS SELECT * FROM 旧表’，但是MySQL5.7.x版本里面gtid是开启的，会报以下错误错误12mysql&amp;gt; create table user_backup as select * from user;ERROR 1786 (HY000): Statement violate">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Mysql备份练习 | Liaoxb's Blog</title>
+  <title>Mysql数据备份 | Liaoxb's Blog</title>
   
 
 
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mysql备份练习</h1>
+          <h1 class="post-title" itemprop="name headline">Mysql数据备份</h1>
         
 
         <div class="post-meta">
@@ -310,32 +310,21 @@
       
 
       
-        <ul>
-<li>SQL 表复制</li>
-</ul>
-<p>使用场景：快速复制备份一张表的完整结构以及数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 在mysql表复制时，其实可以直接用命令&apos;CREATE TABLE 新表 AS SELECT * FROM 旧表&apos;，但是MySQL5.7.x版本里面gtid是开启的，会报错</span><br><span class="line">#(解决办法参考https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_consistency.html)：</span><br><span class="line"></span><br><span class="line">mysql&gt; create table user_backup as select * from user;</span><br><span class="line">ERROR 1786 (HY000): Statement violates GTID consistency: CREATE TABLE ... SELECT.</span><br></pre></td></tr></table></figure>
-<p>方法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#第一步：只复制表结构，命名新表为user_backup</span><br><span class="line">mysql&gt; create table user_backup like user;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line">#第二步，只复制表数据，且两张表结构一模一样</span><br><span class="line">mysql&gt; insert into user_backup select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user_backup;</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">| id | created_at          | disable | email            | is_admin | ldap_source | name      | nickname  | updated_at          |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">|  1 | 2019-03-03 23:33:21 |         | admin@wise2c.com |         |        NULL | admin     | admin     | 2019-03-10 18:20:40 |</span><br><span class="line">|  4 | 2019-03-05 13:31:04 |        | bfpiaoran@qq.com |          |        NULL | bfpiaoran | bfpiaoran | 2019-03-05 13:31:04 |</span><br><span class="line">| 41 | 2019-03-12 23:55:03 |         | liaoxb@qq.com    |          |        NULL | liaoxb    | liaoxb    | 2019-03-12 23:55:03 |</span><br><span class="line">| 42 | 2019-03-13 15:47:48 |         | restful@qq.com   |          |        NULL | restful   | restful   | 2019-03-13 15:47:48 |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
-<p>方法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"># 第一步：获取数据表的完整结构</span><br><span class="line">mysql&gt; show create table user \G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: user</span><br><span class="line">Create Table: CREATE TABLE `user` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `created_at` datetime DEFAULT NULL,</span><br><span class="line">  `disable` bit(1) NOT NULL,</span><br><span class="line">  `email` varchar(255) DEFAULT NULL,</span><br><span class="line">  `is_admin` bit(1) NOT NULL,</span><br><span class="line">  `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">  `name` varchar(255) NOT NULL,</span><br><span class="line">  `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">  `updated_at` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">ERROR:</span><br><span class="line">No query specified</span><br><span class="line"></span><br><span class="line">#第二步，修改SQL语句的数据表名，并执行SQL语句</span><br><span class="line">mysql&gt; CREATE TABLE `user_backup1` (</span><br><span class="line">    -&gt;   `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">    -&gt;   `created_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   `disable` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `email` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `is_admin` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">    -&gt;   `name` varchar(255) NOT NULL,</span><br><span class="line">    -&gt;   `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `updated_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   PRIMARY KEY (`id`),</span><br><span class="line">    -&gt;   UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">    -&gt; ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line">#第三步：INSERT INTO... SELECT 语句来实现拷贝数据</span><br><span class="line">mysql&gt; insert into user_backup1 select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br><span class="line">#第四步： 验证查看新表数据</span><br><span class="line">mysql&gt; select * from user_backup1;</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">| id | created_at          | disable | email            | is_admin | ldap_source | name      | nickname  | updated_at          |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">|  1 | 2019-03-03 23:33:21 |         | admin@wise2c.com |         |        NULL | admin     | admin     | 2019-03-10 18:20:40 |</span><br><span class="line">|  4 | 2019-03-05 13:31:04 |        | bfpiaoran@qq.com |          |        NULL | bfpiaoran | bfpiaoran | 2019-03-05 13:31:04 |</span><br><span class="line">| 41 | 2019-03-12 23:55:03 |         | liaoxb@qq.com    |          |        NULL | liaoxb    | liaoxb    | 2019-03-12 23:55:03 |</span><br><span class="line">| 42 | 2019-03-13 15:47:48 |         | restful@qq.com   |          |        NULL | restful   | restful   | 2019-03-13 15:47:48 |</span><br><span class="line">+----+---------------------+---------+------------------+----------+-------------+-----------+-----------+---------------------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>导出表</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p bldr user &gt; user_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don&apos;t want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events.</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">提示：当前数据库实例中开启了 GTID 功能, 在开启有 GTID 功能的数据库实例中, 导出其中任何一个库, 如果没有显示地指定--set-gtid-purged参数, 都会提示这一行信息. 意思是默认情况下, 导出的库中含有 GTID 信息, 如果不想导出包含有 GTID 信息的数据库,需要显示地添加--set-gtid-purged=OFF参数.</span><br></pre></td></tr></table></figure>
+        <h2 id="快速复制表的完整结构和数据"><a href="#快速复制表的完整结构和数据" class="headerlink" title="快速复制表的完整结构和数据"></a>快速复制表的完整结构和数据</h2><p>在mysql表复制时，其实可以直接用命令’CREATE TABLE 新表 AS SELECT * FROM 旧表’，但是MySQL5.7.x版本里面gtid是开启的，会报以下错误错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table user_backup as select * from user;</span><br><span class="line">ERROR 1786 (HY000): Statement violates GTID consistency: CREATE TABLE ... SELECT.</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>解决办法参考 <a href="https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_consistency.html" target="_blank" rel="noopener">https://www.unixso.com/MySQL/gtid_mode-enforce_gtid_consistency.html</a></p>
+</blockquote>
+<p>方法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 第一步：只复制表结构，命名新表为user_backup</span><br><span class="line">mysql&gt; create table user_backup like user;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line"># 第二步，只复制表数据，且两张表结构一模一样</span><br><span class="line">mysql&gt; insert into user_backup select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure></p>
+<p>方法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"># 第一步：获取数据表的完整结构</span><br><span class="line">mysql&gt; show create table user \G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: user</span><br><span class="line">Create Table: CREATE TABLE `user` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `created_at` datetime DEFAULT NULL,</span><br><span class="line">  `disable` bit(1) NOT NULL,</span><br><span class="line">  `email` varchar(255) DEFAULT NULL,</span><br><span class="line">  `is_admin` bit(1) NOT NULL,</span><br><span class="line">  `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">  `name` varchar(255) NOT NULL,</span><br><span class="line">  `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">  `updated_at` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">ERROR:</span><br><span class="line">No query specified</span><br><span class="line"></span><br><span class="line">#第二步，修改SQL语句的表名，并执行SQL语句</span><br><span class="line">mysql&gt; CREATE TABLE `user_backup1` (</span><br><span class="line">    -&gt;   `id` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">    -&gt;   `created_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   `disable` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `email` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `is_admin` bit(1) NOT NULL,</span><br><span class="line">    -&gt;   `ldap_source` bigint(20) DEFAULT NULL,</span><br><span class="line">    -&gt;   `name` varchar(255) NOT NULL,</span><br><span class="line">    -&gt;   `nickname` varchar(255) DEFAULT NULL,</span><br><span class="line">    -&gt;   `updated_at` datetime DEFAULT NULL,</span><br><span class="line">    -&gt;   PRIMARY KEY (`id`),</span><br><span class="line">    -&gt;   UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`)</span><br><span class="line">    -&gt; ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line">#第三步：INSERT INTO... SELECT 语句来实现拷贝数据</span><br><span class="line">mysql&gt; insert into user_backup1 select * from user;</span><br><span class="line">Query OK, 4 rows affected (0.01 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure></p>
+<h2 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p bldr user &gt; user_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don&apos;t want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当前数据库实例中开启了 GTID 功能, 在开启有 GTID 功能的数据库实例中, 导出其中任何一个库, 如果没有显示地指定–set-gtid-purged参数, 都会提示这一行信息. 意思是默认情况下, 导出的库中含有 GTID 信息, 如果不想导出包含有 GTID 信息的数据库,需要显示地添加–set-gtid-purged=OFF参数.</p>
+</blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 加上--set-gtid-purged=OFF参数</span><br><span class="line">root@Master:/# mysqldump -uwise2c -p --set-gtid-purged=OFF bldr user &gt; user_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">root@Master:/# ls user*</span><br><span class="line">user_bak.sql</span><br></pre></td></tr></table></figure>
-<ul>
-<li>导出整个数据库</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p --set-gtid-purged=OFF --all-databases &gt; databases_bak.sql</span><br><span class="line">Enter password:</span><br><span class="line">root@Master:/# ls data*</span><br><span class="line">databases_bak.sql</span><br></pre></td></tr></table></figure>
-<ul>
-<li>导入表</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mysql命令导入</span><br><span class="line">root@Master:/# mysql -uwise2c -p bldr &lt; user_bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># source命令导入</span><br><span class="line">root@Master:/# mysql -uwise2c -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line"></span><br><span class="line">mysql&gt; use bldr;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; source user_bak.sql</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>导入整个数据库</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysql -uwise2c -p  &lt; databases_bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
+<h2 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h2><p>方法一：mysql命令导入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysql -uwise2c -p bldr &lt; user_bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure></p>
+<p>方法二：source命令导入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysql -uwise2c -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line"></span><br><span class="line">mysql&gt; use bldr;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; source user_bak.sql</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<h2 id="导出数据库"><a href="#导出数据库" class="headerlink" title="导出数据库"></a>导出数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysqldump -uwise2c -p --set-gtid-purged=OFF builderdb &gt; bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
+<h2 id="导入数据库"><a href="#导入数据库" class="headerlink" title="导入数据库"></a>导入数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Master:/# mysql -uwise2c -p builderdb &lt; bak.sql</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -365,8 +354,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/29/jenkins-ci-apitest/" rel="next" title="使用Jenkins实现持续集成API自动化测试">
-                <i class="fa fa-chevron-left"></i> 使用Jenkins实现持续集成API自动化测试
+              <a href="/2019/03/29/jenkins-ci-apitest/" rel="next" title="使用Jenkins搭建CI自动化测试">
+                <i class="fa fa-chevron-left"></i> 使用Jenkins搭建CI自动化测试
               </a>
             
           </div>
@@ -429,8 +418,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -445,7 +443,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -458,7 +456,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -481,6 +479,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速复制表的完整结构和数据"><span class="nav-number">1.</span> <span class="nav-text">快速复制表的完整结构和数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导出表"><span class="nav-number">2.</span> <span class="nav-text">导出表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导入表"><span class="nav-number">3.</span> <span class="nav-text">导入表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导出数据库"><span class="nav-number">4.</span> <span class="nav-text">导出数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导入数据库"><span class="nav-number">5.</span> <span class="nav-text">导入数据库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
